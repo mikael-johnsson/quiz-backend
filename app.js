@@ -21,12 +21,12 @@ app.get("/", (req, res) => {
 
 app.get("/api/questions", (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
-  // res.send(questions);
-  res.json(questions);
+  res.json(questions); //returns json to frontend when api call made
 });
 
 //använda parameter i route
 app.get("/api/questions/:id", (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
   const question = questions.find((q) => q.id === parseInt(req.params.id));
   if (!question) res.status(404).send("Didn't find question");
   res.send(question);
