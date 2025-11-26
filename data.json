@@ -1,0 +1,115 @@
+{
+  "totalResult": 10,
+  "questions": [
+    {
+      "question": "Vilket är världens högsta berg?",
+      "answer": "Mount Everest (8849m)",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["geografi", "asien"],
+      "difficultyLevel": "hard",
+      "createdBy": "Micke",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 1
+    },
+    {
+      "question": "Vilken planet kallas ofta för den röda planeten?",
+      "answer": "Mars",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["astronomi", "rymden"],
+      "difficultyLevel": "easy",
+      "createdBy": "Micke",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 2
+    },
+    {
+      "question": "Vad heter Sveriges längsta flod?",
+      "answer": "Klarälven - Göta älv",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["geografi", "sverige"],
+      "difficultyLevel": "medium",
+      "createdBy": "Micke",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 3
+    },
+    {
+      "question": "Vilket år började andra världskriget?",
+      "answer": "1939",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["historia", "andra världskriget"],
+      "difficultyLevel": "medium",
+      "createdBy": "Micke",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 4
+    },
+    {
+      "question": "Vad heter den kemiska beteckningen för guld?",
+      "answer": "Au",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["kemi", "element"],
+      "difficultyLevel": "easy",
+      "createdBy": "Micke",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 5
+    },
+    {
+      "question": "Vilket språk har flest modersmålstalare i världen?",
+      "answer": "Mandarin",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["språk", "världen"],
+      "difficultyLevel": "hard",
+      "createdBy": "Cornelia",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 6
+    },
+    {
+      "question": "Vilken stad kallas ofta för 'den eviga staden'?",
+      "answer": "Rom",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["kultur", "europa"],
+      "difficultyLevel": "easy",
+      "createdBy": "Micke",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 7
+    },
+    {
+      "question": "Vad kallas processen där växter omvandlar solljus till energi?",
+      "answer": "Fotosyntesen",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["biologi", "natur"],
+      "difficultyLevel": "easy",
+      "createdBy": "Cornelia",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 8
+    },
+    {
+      "question": "Vilken svensk författare skrev 'Mio, min Mio'?",
+      "answer": "Astrid Lindgren",
+      "questionType": "singleAnswer",
+      "isApproved": true,
+      "theme": ["litteratur", "sverige"],
+      "difficultyLevel": "easy",
+      "createdBy": "Cornelia",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 9
+    },
+    {
+      "question": "Vilket land vann fotbolls-VM för herrar 2018?",
+      "answer": "Frankrike",
+      "questionType": "singleAnswer",
+      "isApproved": false,
+      "theme": ["sport", "fotboll"],
+      "difficultyLevel": "medium",
+      "createdBy": "Micke",
+      "createdWhen": "November 20, 2025 09:24:00",
+      "id": 10
+    }
+  ]
+}

@@ -4,20 +4,21 @@ const app = express();
 app.use(express.json());
 //installera cors paketet, sen app.cors()
 
-const questions = [
-  { id: 1, question: "How tall is the Eiffel Tower?", answer: "368m" },
-  { id: 2, question: "What is the capitol of Denmark", answer: "Copenhagen" },
-  {
-    id: 3,
-    question: "Who is the president of Finland?",
-    answer: "Alexander Stubb",
-  },
-  { id: 4, question: "What color is magenta?", answer: "Pink" },
-];
+//import hard coded data from data.json
+const data = require("./data.json");
+const questions = data.questions;
 
 //define a route
 app.get("/", (req, res) => {
-  res.send(`<h1>hipp1</h1>`);
+  res.send(
+    `<h1>Quiz Database</h1>
+    <p>Skriv in någon av dessa URL:s för att testa API:et</p>
+    <ul>
+        <li><em>/api/questions</em> - för att se alla frågor</li>
+        <li><em>/api/questions/'siffra'</em> - för att se enskild fråga</li>
+    </ul>
+    `
+  );
 });
 
 //returns json to frontend when api call made.
@@ -36,18 +37,14 @@ app.get("/api/questions/:id", (req, res) => {
   res.send(question);
 });
 
-//använda flera parametrar i route
-app.get("/api/questions/:id/:year", (req, res) => {
-  res.send(req.params);
-});
-
-//query parameters (efter url:en ?sortBy=name)
-app.get("/api/sort", (req, res) => {
-  res.send(req.query);
-});
-
-//POST
+//POST - posting questions to the "database",
+// in this case to the temporary list on the server
 app.post("/api/questions", (req, res) => {
+  if (!req.body.question) {
+    //input validation on question
+    res.status(400).send("Error message"); //sending status message
+    return; //returning because we dont want to add an empty question to database
+  }
   const question = {
     id: questions.length + 1,
     question: req.body.question,
