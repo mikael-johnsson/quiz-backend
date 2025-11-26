@@ -2,6 +2,7 @@ const express = require("express"); // express is now an function
 const app = express();
 
 app.use(express.json());
+//installera cors paketet, sen app.cors()
 
 const questions = [
   { id: 1, question: "How tall is the Eiffel Tower?", answer: "368m" },
@@ -19,9 +20,12 @@ app.get("/", (req, res) => {
   res.send(`<h1>hipp1</h1>`);
 });
 
+//returns json to frontend when api call made.
+// if not correct json, it wont send if not correct json.
+// CORS should be fixed earlier so its not needed on every single endpoint
 app.get("/api/questions", (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
-  res.json(questions); //returns json to frontend when api call made
+  res.json(questions);
 });
 
 //använda parameter i route
