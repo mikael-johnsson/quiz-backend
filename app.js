@@ -16,7 +16,7 @@ const questions = [
 
 //define a route
 app.get("/", (req, res) => {
-  res.send(`<h1>hipp!</h1>`);
+  res.send(`<h1>hipp1</h1>`);
 });
 
 app.get("/api/questions", (req, res) => {
