@@ -20,7 +20,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/questions", (req, res) => {
-  res.send(questions);
+  res.set("Access-Control-Allow-Origin", "*");
+  // res.send(questions);
+  res.json(questions);
 });
 
 //använda parameter i route
