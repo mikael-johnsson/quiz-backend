@@ -9,6 +9,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+const randomizer = require("./randomizer");
+const themeFilter = require("./themeFilter");
+
 //import hard coded data from data.json
 const data = require("./data.json");
 const questions = data.questions;
@@ -42,8 +45,34 @@ app.get("/api/questions", (req, res) => {
 //använda parameter i route
 app.get("/api/questions/:id", (req, res) => {
   const question = questions.find((q) => q.id === parseInt(req.params.id));
-  if (!question) res.status(404).send("Didn't find question");
+  if (!question)
+    res
+      .status(404)
+      .send("Didn't find question, your searched for questions by id");
   res.send(question);
+});
+
+// ?theme=<value> in the url returns all questions with that theme
+app.get("/api/query", (req, res) => {
+  const filteredQuestions = themeFilter(questions, req.query);
+  if (filteredQuestions.length !== 0) {
+    res.status(200);
+    res.json(filteredQuestions);
+  } else {
+    res.status(404).send("Didn't find any questions that match that theme");
+  }
+});
+
+//the user gets 5 random questions
+app.get("/api/random", (req, res) => {
+  const randomizedQuestions = randomizer(questions);
+  if (randomizedQuestions) {
+    res.status(200);
+    res.json(randomizedQuestions);
+  } else {
+    res.status(404);
+    res.send("No questions found");
+  }
 });
 
 //LATER
