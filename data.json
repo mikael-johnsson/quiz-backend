@@ -2,7 +2,7 @@
   "questions": [
     {
       "question": "Vilket är världens högsta berg?",
-      "answer": "Mount Everest (8849m)",
+      "answer": "Mount Everest (mer än 8000m)",
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["geografi", "asien"],
