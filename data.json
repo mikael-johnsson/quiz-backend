@@ -6,7 +6,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["geografi", "asien"],
-      "difficultyLevel": "hard",
+      "difficulty": "hard",
       "createdBy": "Micke",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 1
@@ -17,7 +17,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["astronomi", "rymden"],
-      "difficultyLevel": "easy",
+      "difficulty": "easy",
       "createdBy": "Micke",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 2
@@ -28,7 +28,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["geografi", "sverige"],
-      "difficultyLevel": "medium",
+      "difficulty": "medium",
       "createdBy": "Micke",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 3
@@ -39,7 +39,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["historia", "andra världskriget"],
-      "difficultyLevel": "medium",
+      "difficulty": "medium",
       "createdBy": "Micke",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 4
@@ -50,7 +50,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["kemi", "element"],
-      "difficultyLevel": "easy",
+      "difficulty": "easy",
       "createdBy": "Micke",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 5
@@ -61,7 +61,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["språk", "världen"],
-      "difficultyLevel": "hard",
+      "difficulty": "hard",
       "createdBy": "Cornelia",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 6
@@ -72,7 +72,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["kultur", "europa"],
-      "difficultyLevel": "easy",
+      "difficulty": "easy",
       "createdBy": "Micke",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 7
@@ -83,7 +83,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["biologi", "natur"],
-      "difficultyLevel": "easy",
+      "difficulty": "easy",
       "createdBy": "Cornelia",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 8
@@ -94,7 +94,7 @@
       "questionType": "singleAnswer",
       "isApproved": true,
       "themes": ["litteratur", "sverige"],
-      "difficultyLevel": "easy",
+      "difficulty": "easy",
       "createdBy": "Cornelia",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 9
@@ -105,7 +105,7 @@
       "questionType": "singleAnswer",
       "isApproved": false,
       "themes": ["sport", "fotboll"],
-      "difficultyLevel": "medium",
+      "difficulty": "medium",
       "createdBy": "Micke",
       "createdWhen": "November 20, 2025 09:24:00",
       "id": 10
