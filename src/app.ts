@@ -5,6 +5,7 @@ import questionFilter from "./controllers/questionFilter";
 import { Question, SearchResult } from "./types";
 
 import data from "../data.json";
+import { log } from "console";
 
 const app = express();
 app.use(express.json());
@@ -56,19 +57,33 @@ app.get("/api/questions/:id", (req: Request, res: Response) => {
   res.send(question);
 });
 
-app.post("/api/questions", (req: Request, res: Response) => {
-  if (!req.body.question) {
-    res.status(400).send("Error message");
-    return;
-  }
-  const question: Question = {
-    id: questions.length + 1,
-    question: req.body.question,
-    answer: req.body.answer,
-  };
-  questions.push(question);
-  res.send(question);
-});
+// get themes for readme
+const getThemes = () => {
+  let themeArray: string[] = [];
+  questions.forEach((question) => {
+    question.themes?.forEach((theme) => {
+      if (!themeArray.includes(theme)) {
+        themeArray.push(theme);
+      }
+    });
+  });
+  console.log("This is the full themeArray", themeArray);
+};
+getThemes();
+
+// app.post("/api/questions", (req: Request, res: Response) => {
+//   if (!req.body.question) {
+//     res.status(400).send("Error message");
+//     return;
+//   }
+//   const question: Question = {
+//     id: questions.length + 1,
+//     question: req.body.question,
+//     answer: req.body.answer,
+//   };
+//   questions.push(question);
+//   res.send(question);
+// });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port: ${port}`));
