@@ -22,11 +22,17 @@ app.get("/", (req, res) => {
 });
 
 //returns json to frontend when api call made.
-// if not correct json, it wont send if not correct json.
+// if not correct json, it wont send.
 // CORS should be fixed earlier so its not needed on every single endpoint
 app.get("/api/questions", (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
-  res.json(questions);
+  if (questions) {
+    res.status(200);
+    res.json(questions);
+  } else {
+    res.status(404);
+    res.send("No questions found");
+  }
 });
 
 //använda parameter i route
@@ -36,6 +42,8 @@ app.get("/api/questions/:id", (req, res) => {
   if (!question) res.status(404).send("Didn't find question");
   res.send(question);
 });
+
+//LATER
 
 //POST - posting questions to the "database",
 // in this case to the temporary list on the server
