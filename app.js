@@ -1,8 +1,9 @@
 const express = require("express"); // express is now an function
 const app = express();
+const cors = require("cors");
 
 app.use(express.json());
-//installera cors paketet, sen app.cors()
+app.use(cors());
 
 //import hard coded data from data.json
 const data = require("./data.json");
@@ -25,7 +26,7 @@ app.get("/", (req, res) => {
 // if not correct json, it wont send.
 // CORS should be fixed earlier so its not needed on every single endpoint
 app.get("/api/questions", (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  // res.set("Access-Control-Allow-Origin", "*");
   if (questions) {
     res.status(200);
     res.json(questions);
@@ -37,7 +38,7 @@ app.get("/api/questions", (req, res) => {
 
 //använda parameter i route
 app.get("/api/questions/:id", (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  // res.set("Access-Control-Allow-Origin", "*");
   const question = questions.find((q) => q.id === parseInt(req.params.id));
   if (!question) res.status(404).send("Didn't find question");
   res.send(question);
