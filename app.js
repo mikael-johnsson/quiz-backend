@@ -10,7 +10,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const randomizer = require("./randomizer");
-const themeFilter = require("./themeFilter");
+const mainFilter = require("./questionFilter");
 
 //import hard coded data from data.json
 const data = require("./data.json");
@@ -52,9 +52,10 @@ app.get("/api/questions/:id", (req, res) => {
   res.send(question);
 });
 
-// ?theme=<value> in the url returns all questions with that theme
+// ?theme=<value>&difficulty=<value> in the url returns
+// all questions with that theme and difficulty level
 app.get("/api/query", (req, res) => {
-  const filteredQuestions = themeFilter(questions, req.query);
+  const filteredQuestions = mainFilter(questions, req.query);
   if (filteredQuestions.length !== 0) {
     res.status(200);
     res.json(filteredQuestions);
