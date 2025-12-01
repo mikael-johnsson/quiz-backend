@@ -4,8 +4,6 @@ import { Question, SearchResult } from "../types";
 import mainFilter from "../utils/questionFilter";
 
 export const getQuestions = (req: Request, res: Response) => {
-  console.log("Start controller");
-
   const filteredQuestions: Question[] = mainFilter(questions, req.query as any);
   if (filteredQuestions.length !== 0) {
     let searchResult: SearchResult = {
@@ -13,7 +11,6 @@ export const getQuestions = (req: Request, res: Response) => {
       questions: filteredQuestions,
       statusCode: 200,
     };
-    console.log("Returning data");
 
     res.status(200).json(searchResult);
   } else {
