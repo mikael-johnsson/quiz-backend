@@ -10,11 +10,11 @@ import questionsRouter from "./routes/questionsRouter";
 const app = express();
 app.use(express.json());
 
-// const corsOptions = {
-//   origin: "http://localhost:5173",
-// };
-// app.use(cors(corsOptions));
-app.use(cors());
+const corsOptions = {
+  origin: "*,",
+};
+app.use(cors(corsOptions));
+// ["http://localhost:5173"]
 
 export const questions: Question[] = (data as DataObject).questions || [];
 
