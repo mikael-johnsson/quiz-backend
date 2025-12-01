@@ -1,12 +1,12 @@
 import express from "express";
-import { questionsController } from "../controllers/questionsController";
+import {
+  getQuestionById,
+  getQuestions,
+} from "../controllers/questionsController";
 
 const questionsRouter = express.Router();
 
-questionsRouter.get("/api/questions", (req, res) => {
-  console.log("Router");
-
-  questionsController(req, res);
-});
+questionsRouter.get("/", getQuestions);
+questionsRouter.get("/:id", getQuestionById);
 
 export default questionsRouter;
