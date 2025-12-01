@@ -1,4 +1,7 @@
-import { questions } from "../app";
+import { data } from "../../data";
+import { DataObject, Question } from "../types";
+
+const questions: Question[] = data.questions || [];
 
 // get themes for readme
 export const getThemes = () => {
