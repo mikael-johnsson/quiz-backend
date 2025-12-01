@@ -4,9 +4,9 @@ import cors from "cors";
 import { Question, DataObject } from "./types";
 
 import data from "../data.json";
-import { questionRouter } from "./routes/questionRouter";
 import { landingPageRouter } from "./routes/landingPageRouter";
 import { uniqueQuestionRouter } from "./routes/uniqueQuestionRouter";
+import questionsRouter from "./routes/questionsRouter";
 
 const app = express();
 app.use(express.json());
@@ -19,7 +19,7 @@ app.use(cors(corsOptions));
 export const questions: Question[] = (data as DataObject).questions || [];
 
 app.use("/", landingPageRouter);
-app.use("/api/questions", questionRouter);
+app.use("/api/questions", questionsRouter);
 app.use("/api/questions/:id", uniqueQuestionRouter);
 
 // app.post("/api/questions", (req: Request, res: Response) => {
