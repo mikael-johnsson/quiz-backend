@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { questions } from "../app";
-import { Question, SearchResult } from "../types";
+import data from "../../data.json";
+import { DataObject, Question, SearchResult } from "../types";
 import mainFilter from "../utils/questionFilter";
+
+const questions: Question[] = (data as DataObject).questions || [];
 
 export const getQuestions = (req: Request, res: Response) => {
   const filteredQuestions: Question[] = mainFilter(questions, req.query as any);

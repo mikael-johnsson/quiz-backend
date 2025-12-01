@@ -1,9 +1,5 @@
 import express from "express";
 import cors from "cors";
-
-import { Question, DataObject } from "./types";
-
-import data from "../data.json";
 import { landingPageRouter } from "./routes/landingPageRouter";
 import questionsRouter from "./routes/questionsRouter";
 
@@ -15,8 +11,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 // ["http://localhost:5173"]
-
-export const questions: Question[] = (data as DataObject).questions || [];
 
 app.use("/", landingPageRouter);
 app.use("/api/questions", questionsRouter);
