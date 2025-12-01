@@ -1,10 +1,12 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 
-import questionFilter from "./controllers/questionFilter";
-import { Question, DataObject, SearchResult } from "./types";
+import { Question, DataObject } from "./types";
 
 import data from "../data.json";
+import { questionRouter } from "./routes/questionRouter";
+import { landingPageRouter } from "./routes/landingPageRouter";
+import { uniqueQuestionRouter } from "./routes/uniqueQuestionRouter";
 
 const app = express();
 app.use(express.json());
@@ -14,66 +16,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const questions: Question[] = (data as DataObject).questions || [];
+export const questions: Question[] = (data as DataObject).questions || [];
 
-app.get("/", (req: Request, res: Response) => {
-  res.send(
-    `<h1>Quiz Database</h1>
-    <p>Skriv in någon av dessa URL:s för att testa API:et</p>
-    <ul>
-        <li><em>/api/questions</em> - för att se alla frågor</li>
-        <li><em>/api/questions/'siffra'</em> - för att se enskild fråga (1-30)</li>
-        <li>lägg till <em>theme='tema'</em> för att sortera på tema (ex: 'sverige', 'geografi', 'sport')</li>
-        <li>lägg till <em>difficulty='svårighet'</em> för att sortera på svårighet ('easy', 'medium' eller 'hard')</li>
-        <li>lägg till <em>isApproved='svar'</em> för att sortera på godkända frågor ('true' eller 'false')</li>
-        <li>för att använda flera filter, använd '&' mellan filterna</li>
-        <li>ex: <em>https://quiz-backend-one-alpha.vercel.app/api/questions/?theme=sport&difficulty=medium</em></li>
-    </ul>
-    `
-  );
-});
-
-app.get("/api/questions", (req: Request, res: Response) => {
-  const filteredQuestions: Question[] = questionFilter(
-    questions,
-    req.query as any
-  );
-  if (filteredQuestions.length !== 0) {
-    let searchResult: SearchResult = {
-      totalResults: filteredQuestions.length,
-      questions: filteredQuestions,
-      statusCode: 200,
-    };
-    res.status(200);
-    res.json(searchResult);
-  } else {
-    res.status(404).send("Didn't find any questions that match those filters");
-  }
-});
-
-app.get("/api/questions/:id", (req: Request, res: Response) => {
-  const id = parseInt((req.params as any).id);
-  const question = questions.find((q) => q.id === id);
-  if (!question)
-    return res
-      .status(404)
-      .send("Didn't find question, your searched for questions by id");
-  res.send(question);
-});
-
-// get themes for readme
-const getThemes = () => {
-  let themeArray: string[] = [];
-  questions.forEach((question) => {
-    question.themes?.forEach((theme) => {
-      if (!themeArray.includes(theme)) {
-        themeArray.push(theme);
-      }
-    });
-  });
-  console.log("This is the full themeArray", themeArray);
-};
-getThemes();
+app.use("/", landingPageRouter);
+app.use("/api/questions", questionRouter);
+app.use("/api/questions/:id", uniqueQuestionRouter);
 
 // app.post("/api/questions", (req: Request, res: Response) => {
 //   if (!req.body.question) {
