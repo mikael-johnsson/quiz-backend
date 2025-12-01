@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 
 import questionFilter from "./controllers/questionFilter";
-import { Question, SearchResult } from "./types";
+import { Question, DataObject, SearchResult } from "./types";
 
 import data from "../data.json";
 
@@ -14,7 +14,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const questions: Question[] = (data as any).questions || [];
+const questions: Question[] = (data as DataObject).questions || [];
 
 app.get("/", (req: Request, res: Response) => {
   res.send(

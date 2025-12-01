@@ -16,3 +16,7 @@ export interface SearchResult {
   questions: Question[];
   statusCode: number;
 }
+
+export interface DataObject {
+  questions: Question[];
+}
