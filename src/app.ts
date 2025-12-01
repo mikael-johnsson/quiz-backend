@@ -5,7 +5,6 @@ import questionFilter from "./controllers/questionFilter";
 import { Question, SearchResult } from "./types";
 
 import data from "../data.json";
-import { log } from "console";
 
 const app = express();
 app.use(express.json());
@@ -23,7 +22,12 @@ app.get("/", (req: Request, res: Response) => {
     <p>Skriv in någon av dessa URL:s för att testa API:et</p>
     <ul>
         <li><em>/api/questions</em> - för att se alla frågor</li>
-        <li><em>/api/questions/'siffra'</em> - för att se enskild fråga</li>
+        <li><em>/api/questions/'siffra'</em> - för att se enskild fråga (1-30)</li>
+        <li>lägg till <em>theme='tema'</em> för att sortera på tema (ex: 'sverige', 'geografi', 'sport')</li>
+        <li>lägg till <em>difficulty='svårighet'</em> för att sortera på svårighet ('easy', 'medium' eller 'hard')</li>
+        <li>lägg till <em>isApproved='svar'</em> för att sortera på godkända frågor ('true' eller 'false')</li>
+        <li>för att använda flera filter, använd '&' mellan filterna</li>
+        <li>ex: <em>https://quiz-backend-one-alpha.vercel.app/api/questions/?theme=sport&difficulty=medium</em></li>
     </ul>
     `
   );
