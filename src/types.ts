@@ -20,3 +20,9 @@ export interface SearchResult {
 export interface DataObject {
   questions: Question[];
 }
+
+export interface Query {
+  themes?: string[];
+  difficulties?: string[];
+  isApproved?: boolean;
+}

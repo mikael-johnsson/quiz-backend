@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
 import { data } from "../../data";
-import { DataObject, Question, SearchResult } from "../types";
+import { Query, Question, SearchResult } from "../types";
 import mainFilter from "../utils/questionFilter";
 
 const questions: Question[] = data.questions || [];
 
 export const getQuestions = (req: Request, res: Response) => {
-  const filteredQuestions: Question[] = mainFilter(questions, req.query as any);
+  const filteredQuestions: Question[] = mainFilter(
+    questions,
+    req.query as Query
+  );
   if (filteredQuestions.length !== 0) {
     let searchResult: SearchResult = {
       totalResults: filteredQuestions.length,
@@ -19,6 +22,15 @@ export const getQuestions = (req: Request, res: Response) => {
     console.log("404");
     res.status(404).send("Didn't find any questions that match those filters");
   }
+
+  // let searchResult: SearchResult = {
+  //   totalResults: questions.length,
+  //   questions: questions,
+  //   statusCode: 200,
+  // };
+  // res.json(searchResult);
+  // const thisQuery = req.query;
+  // console.log(thisQuery);
 };
 
 export const getQuestionById = (req: Request, res: Response) => {
