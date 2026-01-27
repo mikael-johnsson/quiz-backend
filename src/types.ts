@@ -22,7 +22,7 @@ export interface DataObject {
 }
 
 export interface Query {
-  themes?: string[];
-  difficulties?: string[];
+  themes?: string | string[];
+  difficulties?: string | string[];
   isApproved?: boolean;
 }

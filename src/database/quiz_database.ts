@@ -1,5 +1,5 @@
 import { log } from "console";
-import { Question } from "../types";
+import { Query, Question } from "../types";
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
@@ -32,13 +32,4 @@ export const getClient = (db_uri: string) => {
   });
 
   return client;
-};
-export const getQuestionsFromDatabase = async (db_uri: string | undefined) => {
-  if (!db_uri) return;
-
-  const client = getClient(db_uri);
-  const db = client.db("quiz");
-  const collection = db.collection("questions");
-  const questions: Question[] = await collection.find({}).toArray();
-  return questions;
 };
