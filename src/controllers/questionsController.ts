@@ -6,6 +6,15 @@ import dotenv from "dotenv";
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
 
+/**
+ * connect to the database
+ * build a filter based on the request queries
+ * get the questions based on filter
+ * return questions
+ * @param req the users request
+ * @param res the response sent back,
+ * @returns null
+ */
 export const getQuestions = async (req: Request, res: Response) => {
   if (!uri) return;
   const client = getClient(uri);
@@ -37,23 +46,19 @@ export const getQuestionById = async (req: Request, res: Response) => {
   const client = getClient(uri);
   const db = client.db("quiz");
   const collection = db.collection("questions");
-  const questions: Question[] = await collection.find({}).toArray();
+  const question: Question[] = await collection
+    .find({ id: req.params.id })
+    .toArray();
 
-  if (!questions) return;
-  const id = parseInt((req.params as any).id);
-  const question = questions.find((q) => q.id === id);
-  if (!question)
+  if (!question) {
     return res
       .status(404)
       .send("Didn't find question, your searched for questions by id");
-  res.send(question);
+  } else {
+    res.send(question);
+  }
 };
 
-// type Filter = {
-//   themes?: string | string[] | {};
-//   difficulty?: string | string[] | {};
-//   isApproved?: boolean;
-// };
 const buildFilter = (query: Query) => {
   let filter: any = {};
 
