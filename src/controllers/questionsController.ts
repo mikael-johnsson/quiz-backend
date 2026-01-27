@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { data } from "../../data";
+// import { data } from "../../data";
 import { Query, Question, SearchResult } from "../types";
 import mainFilter from "../utils/questionFilter";
 import { getClient } from "../database/quiz_database";
