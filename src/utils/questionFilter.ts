@@ -8,7 +8,6 @@ const themeFilter = (question: Question, query: Query): boolean => {
   });
 
   return themeExist;
-  return true;
 };
 
 const difficultyFilter = (question: Question, query: Query): boolean => {
@@ -32,13 +31,13 @@ const isApprovedFilter = (question: Question, query: Query): boolean => {
 
 const mainFilter = (questions: Question[], stringQuery: Query): Question[] => {
   const query = makeAttributeArrays(stringQuery);
-  console.log(query);
+  // console.log(query);
 
   return questions.filter(
     (question) =>
       themeFilter(question, query) &&
       difficultyFilter(question, query) &&
-      isApprovedFilter(question, query)
+      isApprovedFilter(question, query),
   );
 };
 
@@ -47,14 +46,14 @@ const makeAttributeArrays = (query: Query): Query => {
   newQuery.themes = Array.isArray(query.themes)
     ? query.themes
     : query.themes
-    ? [query.themes]
-    : [];
+      ? [query.themes]
+      : [];
 
   newQuery.difficulties = Array.isArray(query.difficulties)
     ? query.difficulties
     : query.difficulties
-    ? [query.difficulties]
-    : [];
+      ? [query.difficulties]
+      : [];
 
   newQuery.isApproved = query.isApproved;
 

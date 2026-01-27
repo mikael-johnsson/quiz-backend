@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import { landingPageRouter } from "./routes/landingPageRouter";
+import landingPageRouter from "./routes/landingPageRouter";
 import questionsRouter from "./routes/questionsRouter";
 import dotenv from "dotenv";
-import { run } from "./database/quiz_database";
+import { getQuestionsFromDatabase, run } from "./database/quiz_database";
 
 dotenv.config();
 
