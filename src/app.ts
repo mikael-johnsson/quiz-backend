@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import { getQuestionsFromDatabase, run } from "./database/quiz_database";
 
 dotenv.config();
-
+console.log("Det här är type of URI:n", typeof process.env.MONGODB_URI);
 const uri: string | undefined = process.env.MONGODB_URI;
 
 const app = express();
