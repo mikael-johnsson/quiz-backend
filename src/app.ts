@@ -2,7 +2,12 @@ import express from "express";
 import cors from "cors";
 import { landingPageRouter } from "./routes/landingPageRouter";
 import questionsRouter from "./routes/questionsRouter";
-import { password } from "../mongoPassword";
+import dotenv from "dotenv";
+import { run } from "./database/quiz_database";
+
+dotenv.config();
+
+const uri: string | undefined = process.env.MONGODB_URI;
 
 const app = express();
 app.use(express.json());
@@ -30,41 +35,7 @@ app.use("/api/questions", questionsRouter);
 //   res.send(question);
 // });
 
-//Database
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri = `mongodb+srv://mikael-johnsson:${password}@quiz-db-test.jez5rbj.mongodb.net/?appName=Quiz-DB-test`;
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-// CRUD
-// Post = insert, insertOne(), insertmany()
-// Read = query
-// Update = update
-// Delete = delete
-const database = client.db("Quiz-DB-test");
-console.log(database);
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
+run(uri).catch(console.dir);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port: ${port}`));
