@@ -3,14 +3,7 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 export async function run(db_uri: string | undefined) {
   if (!db_uri) return;
 
-  // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-  const client = new MongoClient(db_uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    },
-  });
+  const client = getClient(db_uri);
   try {
     // Connect the client to the server
     await client.connect();
@@ -24,3 +17,16 @@ export async function run(db_uri: string | undefined) {
     await client.close();
   }
 }
+
+export const getClient = (db_uri: string) => {
+  // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+  const client = new MongoClient(db_uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    },
+  });
+
+  return client;
+};

@@ -2,13 +2,21 @@ import { Request, Response } from "express";
 import { data } from "../../data";
 import { Query, Question, SearchResult } from "../types";
 import mainFilter from "../utils/questionFilter";
+import { getClient } from "../database/quiz_database";
+import dotenv from "dotenv";
 
-const questions: Question[] = data.questions || [];
+dotenv.config();
+
+// const questions: Question[] = data.questions || [];
+
+const client = getClient(process.env.MONGODB_URI || "");
+const db = client.db("quiz");
+const questions: Question[] = db.collection("questions");
 
 export const getQuestions = (req: Request, res: Response) => {
   const filteredQuestions: Question[] = mainFilter(
     questions,
-    req.query as Query
+    req.query as Query,
   );
   if (filteredQuestions.length !== 0) {
     let searchResult: SearchResult = {
