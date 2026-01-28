@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Question, SearchResult } from "../models/types";
 import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
-import { stringToBoolean } from "../utils/stringToBoolean";
+import { buildFilter } from "../utils/buildQueryFilter";
 
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
@@ -52,50 +52,16 @@ export const getQuestionById = async (req: Request, res: Response) => {
   const client = getClient(uri);
   const db = client.db("quiz");
   const collection = db.collection("questions");
-  const question: Question[] = await collection
-    .find({ id: req.params.id })
+  const question: Question = await collection
+    .find({ id: JSON.parse(req.params.id) })
     .toArray();
 
   if (!question) {
-    return res
+    res
       .status(404)
       .send("Didn't find question, your searched for questions by id");
   } else {
-    res.send(question);
+    console.log("question is:", question);
+    res.status(200).json(question);
   }
-};
-
-const buildFilter = (
-  isApproved: string | undefined = undefined,
-  themes: string | string[] | undefined = undefined,
-  difficulties: string | string[] | undefined = undefined,
-) => {
-  let filter: any = {};
-
-  let isApprovedBool: boolean | undefined = undefined;
-  if (isApproved) {
-    isApprovedBool = stringToBoolean(isApproved);
-  }
-
-  if (themes !== null && themes !== undefined) {
-    if (Array.isArray(themes)) {
-      filter.themes = { $in: themes };
-    } else {
-      filter.themes = themes;
-    }
-  }
-
-  if (difficulties !== null && difficulties !== undefined) {
-    if (Array.isArray(difficulties)) {
-      filter.difficulty = { $in: difficulties };
-    } else {
-      filter.difficulty = difficulties;
-    }
-  }
-
-  if (isApprovedBool !== null && isApprovedBool !== undefined) {
-    filter.isApproved = isApprovedBool;
-  }
-  console.log("this is filter: ", filter);
-  return filter;
 };
