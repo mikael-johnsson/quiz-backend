@@ -25,13 +25,8 @@ export const getQuestions = async (req: Request, res: Response) => {
   const { themes, difficulties } = req.query;
   let isApproved = req.query.isApproved as any;
 
-  let isApprovedBool: boolean = false;
-  if (isApproved) {
-    isApprovedBool = stringToBoolean(isApproved);
-  }
-
   const filter = await buildFilter(
-    isApprovedBool,
+    isApproved,
     themes as string | string[],
     difficulties as string | string[],
   );
@@ -71,11 +66,16 @@ export const getQuestionById = async (req: Request, res: Response) => {
 };
 
 const buildFilter = (
-  isApproved: boolean | undefined = undefined,
+  isApproved: string | undefined = undefined,
   themes: string | string[] | undefined = undefined,
   difficulties: string | string[] | undefined = undefined,
 ) => {
   let filter: any = {};
+
+  let isApprovedBool: boolean | undefined = undefined;
+  if (isApproved) {
+    isApprovedBool = stringToBoolean(isApproved);
+  }
 
   if (themes !== null && themes !== undefined) {
     if (Array.isArray(themes)) {
@@ -93,8 +93,8 @@ const buildFilter = (
     }
   }
 
-  if (isApproved !== null && isApproved !== undefined) {
-    filter.isApproved = isApproved;
+  if (isApprovedBool !== null && isApprovedBool !== undefined) {
+    filter.isApproved = isApprovedBool;
   }
   console.log("this is filter: ", filter);
   return filter;
