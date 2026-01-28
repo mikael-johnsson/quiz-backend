@@ -1,4 +1,6 @@
-import { DataObject } from "./src/types";
+//THIS IS NOT USED WHEN CONNECTION TO DATABASE EXISTS
+
+import { DataObject } from "./src/models/types";
 
 export const data: DataObject = {
   questions: [

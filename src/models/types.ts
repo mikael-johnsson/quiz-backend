@@ -17,6 +17,7 @@ export interface SearchResult {
   statusCode: number;
 }
 
+//These are not used at the moment
 export interface DataObject {
   questions: Question[];
 }

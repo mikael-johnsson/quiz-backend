@@ -1,6 +1,3 @@
-import { log } from "console";
-import { Query, Question } from "../types";
-
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
 export async function run(db_uri: string | undefined) {

@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { Query, Question, SearchResult } from "../types";
+import { Question, SearchResult } from "../models/types";
 import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
+import { stringToBoolean } from "../utils/stringToBoolean";
 
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
@@ -20,12 +21,22 @@ export const getQuestions = async (req: Request, res: Response) => {
   const client = getClient(uri);
   const db = client.db("quiz");
   const collection = db.collection("questions");
-  const query: Query = req.query;
 
-  const filter = await buildFilter(query);
+  const { themes, difficulties } = req.query;
+  let isApproved = req.query.isApproved as any;
+
+  let isApprovedBool: boolean = false;
+  if (isApproved) {
+    isApprovedBool = stringToBoolean(isApproved);
+  }
+
+  const filter = await buildFilter(
+    isApprovedBool,
+    themes as string | string[],
+    difficulties as string | string[],
+  );
+
   let questions: Question[] = await collection.find(filter).toArray();
-
-  console.log("QUESTIONS:", questions);
 
   if (questions.length !== 0) {
     let searchResult: SearchResult = {
@@ -59,31 +70,32 @@ export const getQuestionById = async (req: Request, res: Response) => {
   }
 };
 
-const buildFilter = (query: Query) => {
+const buildFilter = (
+  isApproved: boolean | undefined = undefined,
+  themes: string | string[] | undefined = undefined,
+  difficulties: string | string[] | undefined = undefined,
+) => {
   let filter: any = {};
 
-  if (query.themes !== null && query.themes !== undefined) {
-    if (Array.isArray(query.themes)) {
-      filter.themes = { $in: query.themes };
+  if (themes !== null && themes !== undefined) {
+    if (Array.isArray(themes)) {
+      filter.themes = { $in: themes };
     } else {
-      filter.themes = query.themes;
+      filter.themes = themes;
     }
   }
 
-  if (query.difficulties !== null && query.difficulties !== undefined) {
-    if (Array.isArray(query.difficulties)) {
-      filter.difficulty = { $in: query.difficulties };
+  if (difficulties !== null && difficulties !== undefined) {
+    if (Array.isArray(difficulties)) {
+      filter.difficulty = { $in: difficulties };
     } else {
-      filter.difficulty = query.difficulties;
+      filter.difficulty = difficulties;
     }
   }
 
-  if (query.isApproved !== null && query.isApproved !== undefined) {
-    if (typeof query.isApproved === "string") {
-      filter.isApproved = query.isApproved === "true";
-    } else {
-      filter.isApproved = query.isApproved;
-    }
+  if (isApproved !== null && isApproved !== undefined) {
+    filter.isApproved = isApproved;
   }
+  console.log("this is filter: ", filter);
   return filter;
 };

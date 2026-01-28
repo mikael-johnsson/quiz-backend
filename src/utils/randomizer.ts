@@ -1,4 +1,4 @@
-import { Question } from "../types";
+import { Question } from "../models/types";
 
 const randomizeQuestions = (questions: Question[], count = 5): Question[] => {
   const pool = [...questions];
