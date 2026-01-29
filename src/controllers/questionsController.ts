@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Question, SearchResult } from "../models/types";
 import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
-import { buildFilter } from "../utils/buildQueryFilter";
+import { buildQueryFilter } from "../utils/buildQueryFilter";
 
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
@@ -22,16 +22,20 @@ export const getQuestions = async (req: Request, res: Response) => {
   const db = client.db("quiz");
   const collection = db.collection("questions");
 
-  const { themes, difficulties } = req.query;
+  const { themes, difficulties, createdBy } = req.query;
   let isApproved = req.query.isApproved as any;
 
-  const filter = await buildFilter(
+  const filter = await buildQueryFilter(
     isApproved,
     themes as string | string[],
     difficulties as string | string[],
+    createdBy as string,
   );
 
-  let questions: Question[] = await collection.find(filter).toArray();
+  // let questions: Question[] = await collection.find(filter).toArray();
+  let questions: Question[] = await collection
+    .find({ createdBy: "Cornelia" })
+    .toArray();
 
   if (questions.length !== 0) {
     let searchResult: SearchResult = {
@@ -61,7 +65,6 @@ export const getQuestionById = async (req: Request, res: Response) => {
       .status(404)
       .send("Didn't find question, your searched for questions by id");
   } else {
-    console.log("question is:", question);
     res.status(200).json(question);
   }
 };
