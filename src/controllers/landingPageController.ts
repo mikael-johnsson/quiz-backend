@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-export const landingPageController = (req: Request, res: Response) => {
+export const landingPageController = (_: Request, res: Response) => {
   res.status(200).send(
     `<h1>Quiz Database</h1>
     <p>Skriv in någon av dessa URL:s för att testa API:et</p>
@@ -13,6 +13,6 @@ export const landingPageController = (req: Request, res: Response) => {
         <li>för att använda flera filter, använd '&' mellan filterna</li>
         <li>ex: <em>https://quiz-backend-one-alpha.vercel.app/api/questions/?theme=sport&difficulty=medium</em></li>
     </ul>
-    `
+    `,
   );
 };

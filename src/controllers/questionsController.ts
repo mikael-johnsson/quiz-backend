@@ -3,9 +3,10 @@ import { Question, SearchResult } from "../models/types";
 import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
 import { buildQueryFilter } from "../utils/buildQueryFilter";
-import { log } from "console";
 
 dotenv.config();
+
+// URI to the MongoDB database
 const uri: string | undefined = process.env.MONGODB_URI;
 
 /**
@@ -44,11 +45,16 @@ export const getQuestions = async (req: Request, res: Response) => {
 
     res.status(200).json(searchResult);
   } else {
-    console.log("404");
     res.status(404).send("Didn't find any questions that match those filters");
   }
 };
 
+/**
+ * Returns a question to the user based on id from request params
+ * @param req the users request
+ * @param res the response sent back
+ * @returns null
+ */
 export const getQuestionById = async (req: Request, res: Response) => {
   if (!uri) return;
   const client = getClient(uri);
@@ -67,6 +73,12 @@ export const getQuestionById = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Posts a question to the database
+ * @param req the users request (containing the question property in the body)
+ * @param res the response sent back (error obj or response obj from MongoDB)
+ * @returns
+ */
 export const postQuestion = async (req: Request, res: Response) => {
   try {
     const date = new Date();
@@ -96,6 +108,12 @@ export const postQuestion = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Deletes question from database based on id in request params
+ * @param req the users request
+ * @param res the reponse sent back (error obj or response obj from MongoDB)
+ * @returns null
+ */
 export const deleteQuestion = async (req: Request, res: Response) => {
   try {
     if (!uri) return;

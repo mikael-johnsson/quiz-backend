@@ -44,7 +44,7 @@ _/?difficulty=easy_
 
 ## "Database"
 
-The database is, as of now, still hardcoded into the code base.
+The database is located on MongoDB.
 
 ### Schemas
 
