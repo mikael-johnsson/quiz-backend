@@ -12,27 +12,12 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: "*",
+  origin: ["http://localhost:5173"], // Lägg till frontends deployade URL när deployad
 };
 app.use(cors(corsOptions));
-// ["http://localhost:5173"]
 
 app.use("/", landingPageRouter);
 app.use("/api/questions", questionsRouter);
-
-// app.post("/api/questions", (req: Request, res: Response) => {
-//   if (!req.body.question) {
-//     res.status(400).send("Error message");
-//     return;
-//   }
-//   const question: Question = {
-//     id: questions.length + 1,
-//     question: req.body.question,
-//     answer: req.body.answer,
-//   };
-//   questions.push(question);
-//   res.send(question);
-// });
 
 run(uri).catch(console.dir);
 

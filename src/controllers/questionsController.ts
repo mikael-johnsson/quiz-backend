@@ -3,6 +3,7 @@ import { Question, SearchResult } from "../models/types";
 import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
 import { buildQueryFilter } from "../utils/buildQueryFilter";
+import { log } from "console";
 
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
@@ -32,10 +33,7 @@ export const getQuestions = async (req: Request, res: Response) => {
     createdBy as string,
   );
 
-  // let questions: Question[] = await collection.find(filter).toArray();
-  let questions: Question[] = await collection
-    .find({ createdBy: "Cornelia" })
-    .toArray();
+  let questions: Question[] = await collection.find(filter).toArray();
 
   if (questions.length !== 0) {
     let searchResult: SearchResult = {
@@ -66,5 +64,49 @@ export const getQuestionById = async (req: Request, res: Response) => {
       .send("Didn't find question, your searched for questions by id");
   } else {
     res.status(200).json(question);
+  }
+};
+
+export const postQuestion = async (req: Request, res: Response) => {
+  try {
+    const date = new Date();
+
+    const { question, answer, questionType, themes, difficulty, createdBy } =
+      req.body;
+    const newQuestion: Question = {
+      id: Date.now(),
+      question: question,
+      answer: answer,
+      questionType: questionType,
+      themes: themes,
+      difficulty: difficulty,
+      createdBy: createdBy,
+      createdWhen: date.toString(),
+      isApproved: false,
+    };
+    if (!uri) return;
+    const client = getClient(uri);
+    const db = client.db("quiz");
+    const collection = db.collection("questions");
+    const response = await collection.insertOne(newQuestion);
+    res.status(201).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
+export const deleteQuestion = async (req: Request, res: Response) => {
+  try {
+    if (!uri) return;
+    const { id } = req.params;
+    const client = getClient(uri);
+    const db = client.db("quiz");
+    const collection = db.collection("questions");
+    const response = await collection.deleteOne({ id: id });
+    res.status(203).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
   }
 };
