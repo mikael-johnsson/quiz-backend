@@ -14,7 +14,7 @@ app.use(express.json());
 const corsOptions = {
   origin: ["http://localhost:5173"], // Lägg till frontends deployade URL när deployad
 };
-app.use(cors(corsOptions));
+app.use(cors()); // allow all
 
 app.use("/", landingPageRouter);
 app.use("/api/questions", questionsRouter);
