@@ -128,3 +128,30 @@ export const deleteQuestion = async (req: Request, res: Response) => {
     res.status(500).json(error);
   }
 };
+
+//Något här funkar inte
+export const replaceQuestion = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { question } = req.body;
+
+    if (+id !== question.id) {
+      res.status(400).send("Parameter Id and Body Id does not match");
+    }
+
+    if (!uri) return;
+    const client = getClient(uri);
+    const db = client.db("quiz");
+    const collection = db.collection("questions");
+    const response = await collection.replaceOne({ id: +id }, question);
+
+    if (response.ok) {
+      res.status(200).json(response);
+    } else {
+      res.status(400).json(response);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
