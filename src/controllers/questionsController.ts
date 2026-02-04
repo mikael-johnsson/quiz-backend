@@ -129,11 +129,17 @@ export const deleteQuestion = async (req: Request, res: Response) => {
   }
 };
 
-//Något här funkar inte
+/**
+ *
+ * @param req users request containing newQuestion
+ * @param res response sent to user, MongoDBs response if status 200
+ * @returns null
+ */
 export const replaceQuestion = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { question } = req.body;
+    const { question }: { question: Question } = req.body;
+    // here we should check if all properties of the question exists
 
     if (+id !== question.id) {
       res.status(400).send("Parameter Id and Body Id does not match");
@@ -143,9 +149,10 @@ export const replaceQuestion = async (req: Request, res: Response) => {
     const client = getClient(uri);
     const db = client.db("quiz");
     const collection = db.collection("questions");
+    // this will replace curr obj with "question", no matter what type question is
     const response = await collection.replaceOne({ id: +id }, question);
 
-    if (response.ok) {
+    if (response.modifiedCount > 0) {
       res.status(200).json(response);
     } else {
       res.status(400).json(response);
@@ -155,3 +162,6 @@ export const replaceQuestion = async (req: Request, res: Response) => {
     res.status(500).json(error);
   }
 };
+
+// here create updateQuestion (only update certain properties)
+// use updateOne()
