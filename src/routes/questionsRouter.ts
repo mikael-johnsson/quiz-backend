@@ -16,90 +16,126 @@ import {
 const questionsRouter = express.Router();
 
 questionsRouter.get("/", async (req, res) => {
-  const { isApproved, themes, difficulties, createdBy }: getQuestionsQuery =
-    req.query;
+  try {
+    const { isApproved, themes, difficulties, createdBy }: getQuestionsQuery =
+      req.query;
 
-  const questions = await getQuestions(
-    isApproved,
-    themes,
-    difficulties,
-    createdBy,
-  );
+    const questions = await getQuestions(
+      isApproved,
+      themes,
+      difficulties,
+      createdBy,
+    );
 
-  if (questions && questions.length !== 0) {
-    let searchResult: SearchResult = {
-      totalResults: questions.length,
-      questions: questions,
-      statusCode: 200,
-    };
+    if (Array.isArray(questions)) {
+      if (questions.length !== 0) {
+        let searchResult: SearchResult = {
+          totalResults: questions.length,
+          questions: questions,
+          statusCode: 200,
+        };
 
-    res.status(200).json(searchResult);
-  } else {
-    res.status(404).send("Didn't find any questions that match those filters");
+        res.status(200).json(searchResult);
+      } else {
+        res
+          .status(404)
+          .send("Didn't find any questions that match those filters");
+      }
+    } else {
+      res.status(questions.status).json(questions);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong", error: error });
   }
 });
 
 questionsRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  if (!id)
-    res.status(400).json({ message: "Request did not contain id parameter" });
+  try {
+    const { id } = req.params;
+    if (!id)
+      res.status(400).json({ message: "Request did not contain id parameter" });
 
-  const question = await getQuestionById(id);
-
-  if (!question) {
-    res
-      .status(404)
-      .send("Didn't find question, you searched for questions by id: " + id);
-  } else {
-    res.status(200).json(question);
+    const question = await getQuestionById(id);
+    if (Array.isArray(question)) {
+      if (question.length === 0) {
+        res
+          .status(404)
+          .send(
+            "Didn't find question, you searched for questions by id: " + id,
+          );
+      } else {
+        res.status(200).json(question);
+      }
+    } else {
+      res.status(question.status).json(question);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong", error: error });
   }
 });
 
 questionsRouter.post("/", async (req, res) => {
-  const {
-    question,
-    answer,
-    questionType,
-    themes,
-    difficulty,
-    createdBy,
-  }: PostQuestionBody = req.body;
-  const response = await postQuestion(
-    question,
-    answer,
-    questionType,
-    themes,
-    difficulty,
-    createdBy,
-  );
-  res.status(response.status).send(response.message);
+  try {
+    const {
+      question,
+      answer,
+      questionType,
+      themes,
+      difficulty,
+      createdBy,
+    }: PostQuestionBody = req.body;
+    const response = await postQuestion(
+      question,
+      answer,
+      questionType,
+      themes,
+      difficulty,
+      createdBy,
+    );
+    res.status(response.status).send(response);
+  } catch (error) {
+    console.error(error);
+    return { status: 500, message: "Something went wrong", error: error };
+  }
 });
 
 questionsRouter.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-
-  const response = await deleteQuestion(id);
-  if (response.deletedCount > 0) {
-    res.status(203).json(response);
-  } else {
-    res.status(500).json({ message: "something went wrong, nothing deleted" });
+  try {
+    const { id } = req.params;
+    const response = await deleteQuestion(id);
+    res.status(response.status).json(response); // this response is not showing on postman, but status works
+  } catch (error) {
+    console.error(error);
+    return { status: 500, message: "Something went wrong", error: error };
   }
 });
+
 questionsRouter.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const { question }: { question: Question } = req.body;
-  // here we should check if all properties of the question exists
+  try {
+    const { id } = req.params;
+    const { question }: { question: Question } = req.body;
 
-  if (+id !== question.id) {
-    res.status(400).send("Parameter Id and Body Id does not match");
-  }
+    if (+id !== question.id) {
+      res.status(400).send("Parameter Id and Body Id does not match");
+    }
 
-  const response = await replaceQuestion(id, question);
+    const noUndefinedProperties = Object.values(question).every(
+      (val) => val !== undefined,
+    );
 
-  if (response.modifiedCount > 0) {
-    res.status(200).json(response);
-  } else {
-    res.status(400).json(response);
+    if (noUndefinedProperties) {
+      const response = await replaceQuestion(id, question);
+      res.status(response.status).json(response);
+    } else {
+      res
+        .status(400)
+        .send("Question posted did not contain the correct properties");
+    }
+  } catch (error) {
+    console.error(error);
+    return { status: 500, message: "Something went wrong", error: error };
   }
 });
 

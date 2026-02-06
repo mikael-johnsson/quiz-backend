@@ -1,5 +1,4 @@
-import { Request, response, Response } from "express";
-import { Question, SearchResult } from "../models/types";
+import { Question } from "../models/types";
 import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
 import { buildQueryFilter } from "../utils/buildQueryFilter";
@@ -22,21 +21,30 @@ export const getQuestions = async (
   difficulties: string[] | undefined,
   createdBy: string | undefined,
 ) => {
-  if (!uri) return;
-  const client = getClient(uri);
-  const db = client.db("quiz");
-  const collection = db.collection("questions");
+  try {
+    if (!uri) return { status: 500, message: "Could not find URI to database" };
+    const client = getClient(uri);
+    const db = client.db("quiz");
+    const collection = db.collection("questions");
 
-  const filter = await buildQueryFilter(
-    isApproved,
-    themes as string | string[],
-    difficulties as string | string[],
-    createdBy as string,
-  );
+    const filter = await buildQueryFilter(
+      isApproved,
+      themes as string | string[],
+      difficulties as string | string[],
+      createdBy as string,
+    );
 
-  let questions: Question[] = await collection.find(filter).toArray();
+    let questions: Question[] = await collection.find(filter).toArray();
 
-  return questions;
+    return questions;
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      message: "Error when getting questions",
+      error: error,
+    };
+  }
 };
 
 /**
@@ -46,14 +54,23 @@ export const getQuestions = async (
  * @returns null
  */
 export const getQuestionById = async (id: string) => {
-  if (!uri) return;
-  const client = getClient(uri);
-  const db = client.db("quiz");
-  const collection = db.collection("questions");
-  const question: Question = await collection
-    .find({ id: JSON.parse(id) })
-    .toArray();
-  return question;
+  try {
+    if (!uri) return { status: 500, message: "Could not find database URL" };
+    const client = getClient(uri);
+    const db = client.db("quiz");
+    const collection = db.collection("questions");
+    const question: Question[] = await collection
+      .find({ id: JSON.parse(id) })
+      .toArray();
+    return question;
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      message: "Error when getting question",
+      error: error,
+    };
+  }
 };
 
 /**
@@ -93,7 +110,11 @@ export const postQuestion = async (
       const db = client.db("quiz");
       const collection = db.collection("questions");
       const response = await collection.insertOne(newQuestion);
-      return { status: 203, message: "Question added to database." };
+      return {
+        status: 203,
+        message: "Question added to database.",
+        response: response,
+      };
     } else {
       return {
         status: 400,
@@ -105,6 +126,7 @@ export const postQuestion = async (
     return {
       status: 500,
       message: "Something went wrong",
+      error: error,
     };
   }
 };
@@ -117,14 +139,23 @@ export const postQuestion = async (
  */
 export const deleteQuestion = async (id: string) => {
   try {
-    if (!uri) return;
+    if (!uri) return { status: 500, message: "Could not find database URL" };
     const client = getClient(uri);
     const db = client.db("quiz");
     const collection = db.collection("questions");
+
     const response = await collection.deleteOne({ id: +id });
-    return response;
+
+    if (response.deletedCount > 0)
+      return { status: 204, message: "Question deleted", response: response };
+    return { status: 500, message: "Could not delete that question" };
   } catch (error) {
     console.error(error);
+    return {
+      status: 500,
+      message: "Something went wrong",
+      error: error,
+    };
   }
 };
 
@@ -136,13 +167,15 @@ export const deleteQuestion = async (id: string) => {
  */
 export const replaceQuestion = async (id: string, question: Question) => {
   try {
-    if (!uri) return;
+    if (!uri) return { status: 500, message: "Could not find database URL" };
     const client = getClient(uri);
     const db = client.db("quiz");
     const collection = db.collection("questions");
-    const questionToUpdate = await collection.find({ id: +id }).toArray();
+
+    const questionToUpdate = await collection.find({ id: +id });
     if (questionToUpdate) {
-      return await collection.replaceOne({ id: +id }, question);
+      const response = await collection.replaceOne({ id: +id }, question);
+      return { status: 200, message: "Question replaced", response: response };
     } else {
       return {
         status: 404,
@@ -151,7 +184,11 @@ export const replaceQuestion = async (id: string, question: Question) => {
     }
   } catch (error) {
     console.error(error);
-    return error;
+    return {
+      status: 500,
+      message: "Something went wrong",
+      error: error,
+    };
   }
 };
 
