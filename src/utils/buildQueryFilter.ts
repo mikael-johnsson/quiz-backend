@@ -37,6 +37,5 @@ export const buildQueryFilter = (
     filter.createdBy = createdBy;
   }
 
-  console.log("this is filter: ", filter);
   return filter;
 };

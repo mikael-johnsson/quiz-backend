@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { Question, SearchResult } from "../models/types";
 import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
@@ -14,18 +14,18 @@ const uri: string | undefined = process.env.MONGODB_URI;
  * build a filter based on the request queries
  * get the questions based on filter
  * return questions
- * @param req the users request
- * @param res the response sent back,
- * @returns null
+ * @returns an array with questions from database or empty array
  */
-export const getQuestions = async (req: Request, res: Response) => {
+export const getQuestions = async (
+  isApproved: string | undefined,
+  themes: string[] | undefined,
+  difficulties: string[] | undefined,
+  createdBy: string | undefined,
+) => {
   if (!uri) return;
   const client = getClient(uri);
   const db = client.db("quiz");
   const collection = db.collection("questions");
-
-  const { themes, difficulties, createdBy } = req.query;
-  let isApproved = req.query.isApproved as any;
 
   const filter = await buildQueryFilter(
     isApproved,
@@ -36,17 +36,7 @@ export const getQuestions = async (req: Request, res: Response) => {
 
   let questions: Question[] = await collection.find(filter).toArray();
 
-  if (questions.length !== 0) {
-    let searchResult: SearchResult = {
-      totalResults: questions.length,
-      questions: questions,
-      statusCode: 200,
-    };
-
-    res.status(200).json(searchResult);
-  } else {
-    res.status(404).send("Didn't find any questions that match those filters");
-  }
+  return questions;
 };
 
 /**
@@ -55,22 +45,15 @@ export const getQuestions = async (req: Request, res: Response) => {
  * @param res the response sent back
  * @returns null
  */
-export const getQuestionById = async (req: Request, res: Response) => {
+export const getQuestionById = async (id: string) => {
   if (!uri) return;
   const client = getClient(uri);
   const db = client.db("quiz");
   const collection = db.collection("questions");
   const question: Question = await collection
-    .find({ id: JSON.parse(req.params.id) })
+    .find({ id: JSON.parse(id) })
     .toArray();
-
-  if (!question) {
-    res
-      .status(404)
-      .send("Didn't find question, your searched for questions by id");
-  } else {
-    res.status(200).json(question);
-  }
+  return question;
 };
 
 /**
@@ -79,12 +62,17 @@ export const getQuestionById = async (req: Request, res: Response) => {
  * @param res the response sent back (error obj or response obj from MongoDB)
  * @returns
  */
-export const postQuestion = async (req: Request, res: Response) => {
+export const postQuestion = async (
+  question: string,
+  answer: string,
+  questionType: string,
+  themes: string[],
+  difficulty: string,
+  createdBy: string,
+) => {
   try {
     const date = new Date();
 
-    const { question, answer, questionType, themes, difficulty, createdBy } =
-      req.body;
     const newQuestion: Question = {
       id: Date.now(),
       question: question,
@@ -96,15 +84,28 @@ export const postQuestion = async (req: Request, res: Response) => {
       createdWhen: date.toString(),
       isApproved: false,
     };
-    if (!uri) return;
-    const client = getClient(uri);
-    const db = client.db("quiz");
-    const collection = db.collection("questions");
-    const response = await collection.insertOne(newQuestion);
-    res.status(201).json(response);
+    const noUndefinedProperties = Object.values(newQuestion).every(
+      (val) => val !== undefined,
+    );
+    if (noUndefinedProperties) {
+      if (!uri) return { status: 500, message: "No contact with database" };
+      const client = getClient(uri);
+      const db = client.db("quiz");
+      const collection = db.collection("questions");
+      const response = await collection.insertOne(newQuestion);
+      return { status: 203, message: "Question added to database." };
+    } else {
+      return {
+        status: 400,
+        message: "Question did not contain all needed properties",
+      };
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
+    return {
+      status: 500,
+      message: "Something went wrong",
+    };
   }
 };
 
@@ -114,18 +115,16 @@ export const postQuestion = async (req: Request, res: Response) => {
  * @param res the reponse sent back (error obj or response obj from MongoDB)
  * @returns null
  */
-export const deleteQuestion = async (req: Request, res: Response) => {
+export const deleteQuestion = async (id: string) => {
   try {
     if (!uri) return;
-    const { id } = req.params;
     const client = getClient(uri);
     const db = client.db("quiz");
     const collection = db.collection("questions");
-    const response = await collection.deleteOne({ id: id });
-    res.status(203).json(response);
+    const response = await collection.deleteOne({ id: +id });
+    return response;
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
   }
 };
 
@@ -135,31 +134,24 @@ export const deleteQuestion = async (req: Request, res: Response) => {
  * @param res response sent to user, MongoDBs response if status 200
  * @returns null
  */
-export const replaceQuestion = async (req: Request, res: Response) => {
+export const replaceQuestion = async (id: string, question: Question) => {
   try {
-    const { id } = req.params;
-    const { question }: { question: Question } = req.body;
-    // here we should check if all properties of the question exists
-
-    if (+id !== question.id) {
-      res.status(400).send("Parameter Id and Body Id does not match");
-    }
-
     if (!uri) return;
     const client = getClient(uri);
     const db = client.db("quiz");
     const collection = db.collection("questions");
-    // this will replace curr obj with "question", no matter what type question is
-    const response = await collection.replaceOne({ id: +id }, question);
-
-    if (response.modifiedCount > 0) {
-      res.status(200).json(response);
+    const questionToUpdate = await collection.find({ id: +id }).toArray();
+    if (questionToUpdate) {
+      return await collection.replaceOne({ id: +id }, question);
     } else {
-      res.status(400).json(response);
+      return {
+        status: 404,
+        message: "Couldn't find question with that id in database",
+      };
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
+    return error;
   }
 };
 

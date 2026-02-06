@@ -17,6 +17,22 @@ export interface SearchResult {
   statusCode: number;
 }
 
+export type getQuestionsQuery = {
+  isApproved?: string;
+  themes?: string[];
+  difficulties?: string[];
+  createdBy?: string;
+};
+
+export type PostQuestionBody = {
+  question: string;
+  answer: string;
+  questionType: string;
+  themes: string[];
+  difficulty: string;
+  createdBy: string;
+};
+
 //These are not used at the moment
 export interface DataObject {
   questions: Question[];
