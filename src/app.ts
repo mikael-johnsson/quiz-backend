@@ -21,7 +21,7 @@ const corsOptions = {
     "https://quiz-frontend-tawny-eight.vercel.app/",
   ],
 };
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use("/", landingPageRouter);
 app.use("/api/questions", questionsRouter);
