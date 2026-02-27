@@ -8,13 +8,20 @@ import { run } from "./database/quiz_database";
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
 
+if (!uri) {
+  throw Error("Could not find URI to database");
+}
+
 const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: ["http://localhost:5173"], // Lägg till frontends deployade URL när deployad
+  origin: [
+    "http://localhost:5173",
+    "https://quiz-frontend-tawny-eight.vercel.app/",
+  ],
 };
-app.use(cors()); // allow all URLs for origin
+app.use(cors(corsOptions));
 
 app.use("/", landingPageRouter);
 app.use("/api/questions", questionsRouter);
