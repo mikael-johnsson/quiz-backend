@@ -1,5 +1,5 @@
-import { Question } from "../models/types";
-import { getClient } from "../database/quiz_database";
+import { Question, QuestionModel } from "../models/types";
+// import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
 import { buildQueryFilter } from "../utils/buildQueryFilter";
 
@@ -23,9 +23,9 @@ export const getQuestions = async (
 ) => {
   try {
     if (!uri) return { status: 500, message: "Could not find URI to database" };
-    const client = getClient(uri);
-    const db = client.db("quiz");
-    const collection = db.collection("questions");
+    // const client = getClient(uri);
+    // const db = client.db("quiz");
+    // const collection = db.collection("questions");
 
     const filter = await buildQueryFilter(
       isApproved,
@@ -34,7 +34,7 @@ export const getQuestions = async (
       createdBy as string,
     );
 
-    let questions: Question[] = await collection.find(filter).toArray();
+    let questions: Question[] = await QuestionModel.find(filter);
 
     return questions;
   } catch (error) {
@@ -56,12 +56,12 @@ export const getQuestions = async (
 export const getQuestionById = async (id: string) => {
   try {
     if (!uri) return { status: 500, message: "Could not find database URL" };
-    const client = getClient(uri);
-    const db = client.db("quiz");
-    const collection = db.collection("questions");
-    const question: Question[] = await collection
-      .find({ id: JSON.parse(id) })
-      .toArray();
+    // const client = getClient(uri);
+    // const db = client.db("quiz");
+    // const collection = db.collection("questions");
+    const question: Question[] = await QuestionModel.find({
+      id: JSON.parse(id),
+    });
     return question;
   } catch (error) {
     console.error(error);
@@ -106,10 +106,10 @@ export const postQuestion = async (
     );
     if (noUndefinedProperties) {
       if (!uri) return { status: 500, message: "No contact with database" };
-      const client = getClient(uri);
-      const db = client.db("quiz");
-      const collection = db.collection("questions");
-      const response = await collection.insertOne(newQuestion);
+      // const client = getClient(uri);
+      // const db = client.db("quiz");
+      // const collection = db.collection("questions");
+      const response = await QuestionModel.insertOne(newQuestion);
       return {
         status: 203,
         message: "Question added to database.",
@@ -140,11 +140,11 @@ export const postQuestion = async (
 export const deleteQuestion = async (id: string) => {
   try {
     if (!uri) return { status: 500, message: "Could not find database URL" };
-    const client = getClient(uri);
-    const db = client.db("quiz");
-    const collection = db.collection("questions");
+    // const client = getClient(uri);
+    // const db = client.db("quiz");
+    // const collection = db.collection("questions");
 
-    const response = await collection.deleteOne({ id: +id });
+    const response = await QuestionModel.deleteOne({ id: +id });
 
     if (response.deletedCount > 0)
       return { status: 204, message: "Question deleted", response: response };
@@ -168,13 +168,13 @@ export const deleteQuestion = async (id: string) => {
 export const replaceQuestion = async (id: string, question: Question) => {
   try {
     if (!uri) return { status: 500, message: "Could not find database URL" };
-    const client = getClient(uri);
-    const db = client.db("quiz");
-    const collection = db.collection("questions");
+    // const client = getClient(uri);
+    // const db = client.db("quiz");
+    // const collection = db.collection("questions");
 
-    const questionToUpdate = await collection.find({ id: +id });
+    const questionToUpdate = await QuestionModel.find({ id: +id });
     if (questionToUpdate) {
-      const response = await collection.replaceOne({ id: +id }, question);
+      const response = await QuestionModel.replaceOne({ id: +id }, question);
       return { status: 200, message: "Question replaced", response: response };
     } else {
       return {

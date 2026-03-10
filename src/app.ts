@@ -3,7 +3,13 @@ import cors from "cors";
 import landingPageRouter from "./routes/landingPageRouter";
 import questionsRouter from "./routes/questionsRouter";
 import dotenv from "dotenv";
-import { run } from "./database/quiz_database";
+// import { run } from "./database/quiz_database";
+import mongoose from "mongoose";
+import { userRouter } from "./routes/userRouter";
+import loginRouter from "./routes/loginRouter";
+import logoutRouter from "./routes/logoutRouter";
+import { meRouter } from "./routes/meRouter";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
@@ -14,6 +20,7 @@ if (!uri) {
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 const corsOptions = {
   origin: [
@@ -25,8 +32,13 @@ app.use(cors());
 
 app.use("/", landingPageRouter);
 app.use("/api/questions", questionsRouter);
-
-run(uri).catch(console.dir);
+app.use("/users", userRouter);
+app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
+app.use("/me", meRouter);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port: ${port}`));
+app.listen(port, async () => {
+  console.log(`Server is running on port ${port}`);
+  await mongoose.connect(uri, { dbName: "quiz" });
+});

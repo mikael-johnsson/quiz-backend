@@ -1,3 +1,5 @@
+import mongoose, { InferSchemaType, Schema } from "mongoose";
+
 //remove question marks later
 export interface Question {
   id: number;
@@ -33,13 +35,26 @@ export type PostQuestionBody = {
   createdBy: string;
 };
 
-//These are not used at the moment
-export interface DataObject {
-  questions: Question[];
-}
+const userSchema = new Schema({
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+});
 
-export interface Query {
-  themes?: string | string[];
-  difficulties?: string | string[];
-  isApproved?: boolean;
-}
+export type UserType = InferSchemaType<typeof userSchema>;
+export const UserModel = mongoose.model("User", userSchema);
+
+const questionSchema = new Schema({
+  id: { type: Number, required: true, unique: true },
+  question: { type: String, required: true },
+  questionType: { type: String },
+  answer: { type: String },
+  themes: [{ type: String }],
+  difficulty: { type: String },
+  isApproved: { type: Boolean, default: false },
+  createdBy: { type: String },
+  createdWhen: { type: String, default: Date.now },
+});
+
+export const QuestionModel = mongoose.model("Question", questionSchema);
