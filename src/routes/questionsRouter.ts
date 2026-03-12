@@ -12,6 +12,7 @@ import {
   Question,
   SearchResult,
 } from "../models/types";
+import pdfkit from "pdfkit";
 
 const questionsRouter = express.Router();
 
@@ -34,8 +35,38 @@ questionsRouter.get("/", async (req, res) => {
           questions: questions,
           statusCode: 200,
         };
+        const doc = new pdfkit({ size: "A4", margin: 50 });
 
-        res.status(200).json(searchResult);
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", 'attachment; filename="quiz.pdf"');
+
+        // Stream PDF directly to response
+        doc.pipe(res);
+
+        doc.fontSize(20).text("Ditt Quiz", { align: "center" });
+        doc.moveDown();
+
+        questions.forEach((q: Question, i) => {
+          doc.fontSize(14).text(`${i + 1}. ${q.question}`);
+
+          doc.fontSize(12).text(`Svar: ${q.answer}`, {
+            indent: 10,
+          });
+          doc.fontSize(12).text(`Svårighetsgrad: ${q.difficulty}`, {
+            indent: 10,
+          });
+          doc
+            .fontSize(12)
+            .text(`${q.themes ? `Tema: ${q.themes.join(", ")}` : ""}`, {
+              indent: 10,
+            });
+
+          doc.moveDown();
+        });
+
+        doc.end();
+
+        // res.status(200).json(searchResult);
       } else {
         res
           .status(404)
