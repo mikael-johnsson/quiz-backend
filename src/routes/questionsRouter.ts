@@ -13,7 +13,7 @@ import {
   SearchResult,
 } from "../models/types";
 import pdfkit from "pdfkit";
-import { connectDB } from "../app";
+import connectDB from "../app";
 
 const questionsRouter = express.Router();
 

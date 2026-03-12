@@ -87,4 +87,4 @@ app.listen(port, async () => {
   }
 });
 
-export { connectDB };
+export default connectDB;
