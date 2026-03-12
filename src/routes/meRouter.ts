@@ -1,10 +1,12 @@
 import express from "express";
 import { verifyToken } from "../controllers/meController";
+import connectDB from "../app";
 
 export const meRouter = express.Router();
 
-meRouter.get("/", (req, res) => {
+meRouter.get("/", async (req, res) => {
   try {
+    await connectDB();
     const cookie = req.cookies["auth_quiz"];
     if (cookie) {
       const payload = verifyToken(cookie);

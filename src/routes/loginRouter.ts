@@ -1,11 +1,13 @@
 import express from "express";
 import { loginUser } from "../controllers/loginController";
 import jwt from "jsonwebtoken";
+import connectDB from "../app";
 
 const loginRouter = express.Router();
 
 loginRouter.post("/", async (req, res) => {
   try {
+    await connectDB();
     const { email, password } = req.body;
     const loginSuccess = await loginUser(email, password);
     if (loginSuccess) {

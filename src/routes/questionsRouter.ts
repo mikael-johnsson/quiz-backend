@@ -55,6 +55,7 @@ questionsRouter.get("/", async (req, res) => {
 
 questionsRouter.get("/pdf", async (req, res) => {
   try {
+    await connectDB();
     const { isApproved, themes, difficulties, createdBy }: getQuestionsQuery =
       req.query;
 
@@ -120,6 +121,7 @@ questionsRouter.get("/pdf", async (req, res) => {
 
 questionsRouter.get("/:id", async (req, res) => {
   try {
+    await connectDB();
     const { id } = req.params;
     if (!id)
       res.status(400).json({ message: "Request did not contain id parameter" });
@@ -146,6 +148,8 @@ questionsRouter.get("/:id", async (req, res) => {
 
 questionsRouter.post("/", async (req, res) => {
   try {
+    await connectDB();
+
     const {
       question,
       answer,
@@ -171,6 +175,8 @@ questionsRouter.post("/", async (req, res) => {
 
 questionsRouter.delete("/:id", async (req, res) => {
   try {
+    await connectDB();
+
     const { id } = req.params;
     const response = await deleteQuestion(id);
     res.status(response.status).json(response); // this response is not showing on postman, but status works
@@ -182,6 +188,7 @@ questionsRouter.delete("/:id", async (req, res) => {
 
 questionsRouter.put("/:id", async (req, res) => {
   try {
+    await connectDB();
     const { id } = req.params;
     const { question }: { question: Question } = req.body;
 

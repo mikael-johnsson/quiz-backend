@@ -60,7 +60,6 @@ const connectDB = async () => {
       maxPoolSize: 1,
       // 🔥 FORCE IPv4 (Vercel IPv6 issues)
       family: 4,
-      // 🔥 Direct connection (skip replica set discovery)
       autoIndex: false,
       retryWrites: false,
     };
