@@ -52,16 +52,17 @@ const connectDB = async () => {
 
   if (!cached.promise) {
     const opts = {
+      bufferCommands: false,
       dbName: "quiz",
-      // 🔥 FAIL FAST - don't wait 300s
+      // // 🔥 FAIL FAST - don't wait 300s
       serverSelectionTimeoutMS: 2000, // 2s max server discovery
-      connectTimeoutMS: 5000, // 5s max connection
-      socketTimeoutMS: 10000, // 10s socket timeout
-      maxPoolSize: 1,
-      // 🔥 FORCE IPv4 (Vercel IPv6 issues)
-      family: 4,
-      autoIndex: false,
-      retryWrites: false,
+      // connectTimeoutMS: 5000, // 5s max connection
+      // socketTimeoutMS: 10000, // 10s socket timeout
+      // maxPoolSize: 1,
+      // // 🔥 FORCE IPv4 (Vercel IPv6 issues)
+      // family: 4,
+      // autoIndex: false,
+      // retryWrites: false,
     };
 
     cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
@@ -73,7 +74,7 @@ const connectDB = async () => {
   try {
     cached.conn = await cached.promise;
   } catch (e) {
-    cached.promise = null;
+    cached.mongoose = null;
     throw e;
   }
 
@@ -81,14 +82,16 @@ const connectDB = async () => {
 };
 
 // Only use locally
-// app.listen(port, async () => {
-//   try {
-//     await connectDB();
-//     console.log("Connection state:", mongoose.connection.readyState); // 1 means connected
-//     console.log(`Server is running on port ${port}`);
-//   } catch (error) {
-//     console.error("Error connecting to database:", error);
-//   }
-// });
+if (process.env.NODE_ENV === "DEVELOPMENT") {
+  app.listen(port, async () => {
+    try {
+      await connectDB();
+      console.log("Connection state:", mongoose.connection.readyState); // 1 means connected
+      console.log(`Server is running on port ${port}`);
+    } catch (error) {
+      console.error("Error connecting to database:", error);
+    }
+  });
+}
 
 export default connectDB;
