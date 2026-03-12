@@ -51,17 +51,16 @@ const connectDB = async () => {
   }
 
   if (!cached.promise) {
-    // const opts = {
-    //   dbName: "quiz",
-    //   serverSelectionTimeoutMS: 5000,
-    //   connectTimeoutMS: 10000,
-    //   bufferMaxEntries: 0,
-    //   maxPoolSize: 1,
-    //   socketTimeoutMS: 45000,
-    //   family: 4,
-    // };
+    const opts = {
+      dbName: "quiz",
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 10000,
+      maxPoolSize: 1,
+      socketTimeoutMS: 45000,
+      family: 4,
+    };
 
-    cached.promise = mongoose.connect(uri).then((mongoose) => {
+    cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
       console.log("✅ MongoDB connected");
       return mongoose;
     });
