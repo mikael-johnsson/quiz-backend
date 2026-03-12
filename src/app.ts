@@ -38,9 +38,48 @@ app.use("/logout", logoutRouter);
 app.use("/me", meRouter);
 
 const port = process.env.PORT || 3000;
+
+let cached = (global as any).mongoose;
+
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
+
+export const connectDB = async () => {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    // const opts = {
+    //   dbName: "quiz",
+    //   serverSelectionTimeoutMS: 5000,
+    //   connectTimeoutMS: 10000,
+    //   bufferMaxEntries: 0,
+    //   maxPoolSize: 1,
+    //   socketTimeoutMS: 45000,
+    //   family: 4,
+    // };
+
+    cached.promise = mongoose.connect(uri).then((mongoose) => {
+      console.log("✅ MongoDB connected");
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
+};
+
 app.listen(port, async () => {
   try {
-    await mongoose.connect(uri, { dbName: "quiz" });
+    await connectDB();
     console.log("Connection state:", mongoose.connection.readyState); // 1 means connected
     console.log(`Server is running on port ${port}`);
   } catch (error) {

@@ -13,11 +13,13 @@ import {
   SearchResult,
 } from "../models/types";
 import pdfkit from "pdfkit";
+import { connectDB } from "../app";
 
 const questionsRouter = express.Router();
 
 questionsRouter.get("/", async (req, res) => {
   try {
+    await connectDB();
     const { isApproved, themes, difficulties, createdBy }: getQuestionsQuery =
       req.query;
 
