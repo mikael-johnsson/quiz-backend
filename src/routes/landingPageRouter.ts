@@ -5,8 +5,11 @@ import connectDB from "../app";
 const landingPageRouter = express.Router();
 
 landingPageRouter.get("/", async (req, res) => {
+  console.log("🔍 Route called"); // Add this
   await connectDB();
-  const page = landingPageController(res);
+  console.log("🔍 After connectDB");
+
+  const page = landingPageController();
   res.status(200).send(page);
 });
 

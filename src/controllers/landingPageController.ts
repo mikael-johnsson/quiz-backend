@@ -1,8 +1,7 @@
 import { Response } from "express";
-import connectDB from "../app";
-export const landingPageController = async (res: Response) => {
-  return;
-  `<h1>Quiz Database</h1>
+
+export const landingPageController = () => {
+  const page = `<h1>Quiz Database</h1>
     <p>Skriv in någon av dessa URL:s för att testa API:et</p>
     <ul>
         <li><em>/api/questions</em> - för att se alla frågor</li>
@@ -14,4 +13,5 @@ export const landingPageController = async (res: Response) => {
         <li>ex: <em>https://quiz-backend-one-alpha.vercel.app/api/questions/?theme=sport&difficulty=medium</em></li>
     </ul>
     `;
+  return page;
 };
