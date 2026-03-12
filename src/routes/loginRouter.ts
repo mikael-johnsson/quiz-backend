@@ -1,7 +1,7 @@
 import express from "express";
 import { loginUser } from "../controllers/loginController";
 import jwt from "jsonwebtoken";
-import connectDB from "../app";
+import { connectDB } from "../app";
 
 const loginRouter = express.Router();
 

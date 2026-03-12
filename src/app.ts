@@ -74,7 +74,7 @@ const connectDB = async () => {
   try {
     cached.conn = await cached.promise;
   } catch (e) {
-    cached.mongoose = null;
+    cached.promise = null;
     throw e;
   }
 
@@ -93,5 +93,5 @@ if (process.env.NODE_ENV === "DEVELOPMENT") {
     }
   });
 }
-
-export default connectDB;
+export { connectDB };
+export default app;

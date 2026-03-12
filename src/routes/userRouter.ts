@@ -1,6 +1,6 @@
 import express from "express";
 import { createUser } from "../controllers/usersController";
-import connectDB from "../app";
+import { connectDB } from "../app";
 
 export const userRouter = express.Router();
 

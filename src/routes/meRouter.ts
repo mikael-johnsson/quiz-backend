@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../controllers/meController";
-import connectDB from "../app";
+import { connectDB } from "../app";
 
 export const meRouter = express.Router();
 
