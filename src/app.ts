@@ -45,7 +45,7 @@ if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
-export const connectDB = async () => {
+const connectDB = async () => {
   if (cached.conn) {
     return cached.conn;
   }
@@ -86,3 +86,5 @@ app.listen(port, async () => {
     console.error("Error connecting to database:", error);
   }
 });
+
+export { connectDB };
