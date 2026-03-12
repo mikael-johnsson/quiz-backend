@@ -1,6 +1,6 @@
 import express from "express";
 import { landingPageController } from "../controllers/landingPageController";
-import connectDB from "../app";
+import { connectDB } from "../app";
 
 const landingPageRouter = express.Router();
 
