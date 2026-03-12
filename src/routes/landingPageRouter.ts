@@ -4,8 +4,8 @@ import { connectDB } from "../app";
 
 const landingPageRouter = express.Router();
 
-landingPageRouter.get("/", async (req, res) => {
-  console.log("🔍 Route called"); // Add this
+landingPageRouter.get("/", async (_, res) => {
+  console.log("🔍 Route called");
   await connectDB();
   console.log("🔍 After connectDB");
 
