@@ -53,11 +53,16 @@ const connectDB = async () => {
   if (!cached.promise) {
     const opts = {
       dbName: "quiz",
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 10000,
+      // 🔥 FAIL FAST - don't wait 300s
+      serverSelectionTimeoutMS: 2000, // 2s max server discovery
+      connectTimeoutMS: 5000, // 5s max connection
+      socketTimeoutMS: 10000, // 10s socket timeout
       maxPoolSize: 1,
-      socketTimeoutMS: 45000,
+      // 🔥 FORCE IPv4 (Vercel IPv6 issues)
       family: 4,
+      // 🔥 Direct connection (skip replica set discovery)
+      autoIndex: false,
+      retryWrites: false,
     };
 
     cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
