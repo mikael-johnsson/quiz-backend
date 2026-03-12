@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-
-export const landingPageController = (_: Request, res: Response) => {
-  res.status(200).send(
-    `<h1>Quiz Database</h1>
+import { Response } from "express";
+import connectDB from "../app";
+export const landingPageController = async (res: Response) => {
+  return;
+  `<h1>Quiz Database</h1>
     <p>Skriv in någon av dessa URL:s för att testa API:et</p>
     <ul>
         <li><em>/api/questions</em> - för att se alla frågor</li>
@@ -13,6 +13,5 @@ export const landingPageController = (_: Request, res: Response) => {
         <li>för att använda flera filter, använd '&' mellan filterna</li>
         <li>ex: <em>https://quiz-backend-one-alpha.vercel.app/api/questions/?theme=sport&difficulty=medium</em></li>
     </ul>
-    `,
-  );
+    `;
 };
