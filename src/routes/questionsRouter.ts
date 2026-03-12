@@ -35,6 +35,41 @@ questionsRouter.get("/", async (req, res) => {
           questions: questions,
           statusCode: 200,
         };
+
+        res.status(200).json(searchResult);
+      } else {
+        res
+          .status(404)
+          .send("Didn't find any questions that match those filters");
+      }
+    } else {
+      res.status(questions.status).json(questions);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong", error: error });
+  }
+});
+
+questionsRouter.get("/pdf", async (req, res) => {
+  try {
+    const { isApproved, themes, difficulties, createdBy }: getQuestionsQuery =
+      req.query;
+
+    const questions = await getQuestions(
+      isApproved,
+      themes,
+      difficulties,
+      createdBy,
+    );
+
+    if (Array.isArray(questions)) {
+      if (questions.length !== 0) {
+        let searchResult: SearchResult = {
+          totalResults: questions.length,
+          questions: questions,
+          statusCode: 200,
+        };
         const doc = new pdfkit({ size: "A4", margin: 50 });
 
         res.setHeader("Content-Type", "application/pdf");
