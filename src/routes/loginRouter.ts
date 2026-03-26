@@ -18,7 +18,12 @@ loginRouter.post("/", async (req, res) => {
       const token = jwt.sign(loggedInUser, secret, { expiresIn: "1h" });
       res
         .status(200)
-        .cookie("quiz_login", token, { httpOnly: true, maxAge: 10 * 60 * 1000 })
+        .cookie("quiz_login", token, {
+          httpOnly: true,
+          maxAge: 10 * 60 * 1000,
+          sameSite: "none",
+          secure: true,
+        })
         .json(loggedInUser);
     } else {
       res.status(401).json({ message: "Invalid credentials" });

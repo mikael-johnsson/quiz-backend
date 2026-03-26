@@ -24,14 +24,15 @@ app.use(cookieParser());
 
 const corsOptions = {
   origin: [
-    "http://localhost:5173",
-    "https://quiz-frontend-tawny-eight.vercel.app/",
+    "http://localhost:3000",
+    "https://quiz-frontend-tawny-eight.vercel.app",
   ],
+  credentials: true,
 };
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use("/", landingPageRouter);
-app.use("/api/questions", questionsRouter);
+app.use("/questions", questionsRouter);
 app.use("/users", userRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
