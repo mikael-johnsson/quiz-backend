@@ -7,7 +7,7 @@ export const meRouter = express.Router();
 meRouter.get("/", async (req, res) => {
   try {
     await connectDB();
-    const cookie = req.cookies["auth_quiz"];
+    const cookie = req.cookies["quiz_login"];
     if (cookie) {
       const payload = verifyToken(cookie);
       res.status(200).json({ message: "Authenticated", payload });

@@ -5,7 +5,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["geografi", "asien"],
-    "difficulty": "hard",
+    "difficulty": "svårt",
     "createdBy": "Micke",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 1
@@ -16,7 +16,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["astronomi", "rymden"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Micke",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 2
@@ -27,7 +27,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["geografi", "sverige"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Micke",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 3
@@ -38,7 +38,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["historia", "andra världskriget"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Micke",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 4
@@ -49,7 +49,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["kemi", "element"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Micke",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 5
@@ -60,7 +60,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["språk", "världen"],
-    "difficulty": "hard",
+    "difficulty": "svårt",
     "createdBy": "Cornelia",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 6
@@ -71,7 +71,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["kultur", "europa"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Micke",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 7
@@ -82,7 +82,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["biologi", "natur"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Cornelia",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 8
@@ -93,7 +93,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["litteratur", "sverige"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Cornelia",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 9
@@ -104,7 +104,7 @@
     "questionType": "singleAnswer",
     "isApproved": false,
     "themes": ["sport", "fotboll"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Micke",
     "createdWhen": "November 20, 2025 09:24:00",
     "id": 10
@@ -115,7 +115,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["sport", "fotboll"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Micke",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 11
@@ -126,7 +126,7 @@
     "questionType": "singleAnswer",
     "isApproved": false,
     "themes": ["sport", "kändisar"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Cornelia",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 12
@@ -137,7 +137,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["politik", "historia"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Luna",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 13
@@ -148,7 +148,7 @@
     "questionType": "singleAnswer",
     "isApproved": false,
     "themes": ["politik", "historia"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Mikaela",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 14
@@ -159,7 +159,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["historia", "politik"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Micke",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 15
@@ -170,7 +170,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["musik", "kändisar"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Cornelia",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 16
@@ -181,7 +181,7 @@
     "questionType": "singleAnswer",
     "isApproved": false,
     "themes": ["musik"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Luna",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 17
@@ -192,7 +192,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["film", "fantasy"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Mikaela",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 18
@@ -203,7 +203,7 @@
     "questionType": "singleAnswer",
     "isApproved": false,
     "themes": ["film", "kändisar"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Micke",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 19
@@ -214,7 +214,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["tv", "kändisar"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Cornelia",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 20
@@ -225,7 +225,7 @@
     "questionType": "singleAnswer",
     "isApproved": false,
     "themes": ["tv", "film"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Luna",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 21
@@ -236,7 +236,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["politik", "historia"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Mikaela",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 22
@@ -247,7 +247,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["historia", "politik"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Micke",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 23
@@ -258,7 +258,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["sport", "kändisar"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Cornelia",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 24
@@ -269,7 +269,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["sport"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Luna",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 25
@@ -280,7 +280,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["musik", "kändisar"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Mikaela",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 26
@@ -291,7 +291,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["film"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Micke",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 27
@@ -302,7 +302,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["musik", "kändisar"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Cornelia",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 28
@@ -313,7 +313,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["film", "kändisar"],
-    "difficulty": "medium",
+    "difficulty": "mellansvårt",
     "createdBy": "Luna",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 29
@@ -324,7 +324,7 @@
     "questionType": "singleAnswer",
     "isApproved": true,
     "themes": ["sport"],
-    "difficulty": "easy",
+    "difficulty": "enkelt",
     "createdBy": "Mikaela",
     "createdWhen": "November 27, 2025 16:44:00",
     "id": 30

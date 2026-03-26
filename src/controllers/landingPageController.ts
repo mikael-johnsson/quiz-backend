@@ -7,10 +7,10 @@ export const landingPageController = () => {
         <li><em>/api/questions</em> - för att se alla frågor</li>
         <li><em>/api/questions/'siffra'</em> - för att se enskild fråga (1-30)</li>
         <li>lägg till <em>theme='tema'</em> för att sortera på tema (ex: 'sverige', 'geografi', 'sport')</li>
-        <li>lägg till <em>difficulty='svårighet'</em> för att sortera på svårighet ('easy', 'medium' eller 'hard')</li>
+        <li>lägg till <em>difficulty='svårighet'</em> för att sortera på svårighet ('enkelt', 'mellansvårt' eller 'svårt')</li>
         <li>lägg till <em>isApproved='svar'</em> för att sortera på godkända frågor ('true' eller 'false')</li>
         <li>för att använda flera filter, använd '&' mellan filterna</li>
-        <li>ex: <em>https://quiz-backend-one-alpha.vercel.app/api/questions/?theme=sport&difficulty=medium</em></li>
+        <li>ex: <em>https://quiz-backend-one-alpha.vercel.app/api/questions/?theme=sport&difficulty=mellansvårt</em></li>
     </ul>
     `;
   return page;

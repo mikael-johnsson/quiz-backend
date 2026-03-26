@@ -9,8 +9,8 @@ loginRouter.post("/", async (req, res) => {
   try {
     await connectDB();
     const { email, password } = req.body;
-    const loginSuccess = await loginUser(email, password);
-    if (loginSuccess) {
+    const loggedInUser = await loginUser(email, password);
+    if (loggedInUser) {
       const secret = process.env.JWT_SECRET;
       if (!secret) {
         throw new Error("JWT secret not defined");
@@ -18,8 +18,8 @@ loginRouter.post("/", async (req, res) => {
       const token = jwt.sign({ email }, secret, { expiresIn: "1h" });
       res
         .status(200)
-        .cookie("auth_quiz", token, { httpOnly: true })
-        .json({ message: "Login successful" });
+        .cookie("quiz_login", token, { httpOnly: true })
+        .json({ loggedInUser });
     } else {
       res.status(401).json({ message: "Invalid credentials" });
     }

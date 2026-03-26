@@ -6,7 +6,7 @@ export const logoutRouter = express.Router();
 logoutRouter.post("/", async (_, res) => {
   await connectDB();
 
-  res.clearCookie("auth_quiz").json({ message: "Logout successful" });
+  res.clearCookie("quiz_login").json({ message: "Logout successful" });
 });
 
 export default logoutRouter;

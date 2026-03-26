@@ -36,6 +36,7 @@ export type PostQuestionBody = {
 };
 
 const userSchema = new Schema({
+  _id: { type: String, required: true, unique: true },
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -44,6 +45,20 @@ const userSchema = new Schema({
 
 export type UserType = InferSchemaType<typeof userSchema>;
 export const UserModel = mongoose.model("User", userSchema);
+
+export type UserDTO = {
+  id: string;
+  firstname: string;
+  email: string;
+};
+
+export const convertToUserDTO = (user: UserType): UserDTO => {
+  return {
+    id: user._id.toString(),
+    firstname: user.firstname,
+    email: user.email,
+  };
+};
 
 const questionSchema = new Schema({
   id: { type: Number, required: true, unique: true },
