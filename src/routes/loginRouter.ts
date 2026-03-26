@@ -7,9 +7,11 @@ const loginRouter = express.Router();
 
 loginRouter.post("/", async (req, res) => {
   try {
+    console.log("Attempting login");
     await connectDB();
     const { email, password } = req.body;
     const loggedInUser = await loginUser(email, password);
+    console.log("loggedInUser", loggedInUser);
     if (loggedInUser) {
       const secret = process.env.JWT_SECRET;
       if (!secret) {
