@@ -26,6 +26,7 @@ const corsOptions = {
   origin: [
     "http://localhost:3000",
     "https://quiz-frontend-tawny-eight.vercel.app",
+    "https://quiz-frontend-next.vercel.app",
   ],
   credentials: true,
 };
