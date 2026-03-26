@@ -36,14 +36,15 @@ export type PostQuestionBody = {
 };
 
 const userSchema = new Schema({
-  _id: { type: String, required: true, unique: true },
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });
 
-export type UserType = InferSchemaType<typeof userSchema>;
+export type UserType = mongoose.HydratedDocument<
+  InferSchemaType<typeof userSchema>
+>;
 export const UserModel = mongoose.model("User", userSchema);
 
 export type UserDTO = {

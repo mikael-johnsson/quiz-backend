@@ -15,11 +15,11 @@ loginRouter.post("/", async (req, res) => {
       if (!secret) {
         throw new Error("JWT secret not defined");
       }
-      const token = jwt.sign({ email }, secret, { expiresIn: "1h" });
+      const token = jwt.sign(loggedInUser, secret, { expiresIn: "1h" });
       res
         .status(200)
-        .cookie("quiz_login", token, { httpOnly: true })
-        .json({ loggedInUser });
+        .cookie("quiz_login", token, { httpOnly: true, maxAge: 10 * 60 * 1000 })
+        .json(loggedInUser);
     } else {
       res.status(401).json({ message: "Invalid credentials" });
     }

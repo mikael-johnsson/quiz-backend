@@ -3,13 +3,13 @@ import cors from "cors";
 import landingPageRouter from "./routes/landingPageRouter";
 import questionsRouter from "./routes/questionsRouter";
 import dotenv from "dotenv";
-// import { run } from "./database/quiz_database";
 import mongoose from "mongoose";
 import { userRouter } from "./routes/userRouter";
 import loginRouter from "./routes/loginRouter";
 import logoutRouter from "./routes/logoutRouter";
 import { meRouter } from "./routes/meRouter";
 import cookieParser from "cookie-parser";
+import { json } from "express";
 
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
@@ -19,7 +19,7 @@ if (!uri) {
 }
 
 const app = express();
-app.use(express.json());
+app.use(json());
 app.use(cookieParser());
 
 const corsOptions = {
