@@ -9,7 +9,7 @@ export const loginUser = async (email: string, password: string) => {
   const match = await bcrypt.compare(password, user.password);
 
   if (match) {
-    return convertToUserDTO(user); // change this to UserDTO
+    return convertToUserDTO(user);
   }
   return false;
 };
