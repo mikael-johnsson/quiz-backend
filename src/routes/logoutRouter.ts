@@ -4,9 +4,14 @@ import { connectDB } from "../app";
 export const logoutRouter = express.Router();
 
 logoutRouter.post("/", async (_, res) => {
-  await connectDB();
-
-  res.clearCookie("quiz_login").json({ message: "Logout successful" });
+  res
+    .status(200)
+    .clearCookie("quiz_login", {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    })
+    .json({ message: "Logout successful" });
 });
 
 export default logoutRouter;
