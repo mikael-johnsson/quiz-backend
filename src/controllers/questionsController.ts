@@ -98,7 +98,11 @@ export const postQuestion = async (
       themes: themes,
       difficulty: difficulty,
       createdBy: createdBy,
-      createdWhen: date.toString(),
+      createdWhen: date.toLocaleDateString("sv-SE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }),
       isApproved: false,
     };
     const noUndefinedProperties = Object.values(newQuestion).every(
