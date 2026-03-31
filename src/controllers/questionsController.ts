@@ -35,8 +35,12 @@ export const getQuestions = async (
     );
 
     let questions: Question[] = await QuestionModel.find(filter);
+    let questionsToReturn: Question[] = questions;
+    if (isApproved === "false") {
+      questionsToReturn = questionsToReturn.slice(0, 3);
+    }
 
-    return questions;
+    return questionsToReturn;
   } catch (error) {
     console.error(error);
     return {
@@ -203,11 +207,8 @@ export const replaceQuestion = async (id: string, question: Question) => {
  */
 export const updateQuestion = async (id: string) => {
   try {
-    console.log("inside updateQuestion");
     const questionToUpdate = await QuestionModel.findOne({ id: +id });
     if (questionToUpdate) {
-      console.log("questionToUpdate: ", questionToUpdate);
-
       questionToUpdate.isApproved = !questionToUpdate.isApproved;
       const response = await QuestionModel.updateOne(
         { id: +id },
