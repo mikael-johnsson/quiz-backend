@@ -1,4 +1,4 @@
-import { Question, QuestionModel } from "../models/types";
+import { Question, QuestionFromDB, QuestionModel } from "../models/types";
 // import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
 import { buildQueryFilter } from "../utils/buildQueryFilter";
@@ -51,6 +51,24 @@ export const getQuestions = async (
     return {
       status: 500,
       message: "Error when getting questions",
+      error: error,
+    };
+  }
+};
+
+export const getQuestionsForPDF = async (questionIDs: string[]) => {
+  try {
+    const questions: QuestionFromDB[] = [];
+    for (const id of questionIDs) {
+      const question = await QuestionModel.findOne({ id: JSON.parse(id) });
+      if (question) questions.push(question);
+    }
+    return questions;
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      message: "Error when getting questions for PDF",
       error: error,
     };
   }

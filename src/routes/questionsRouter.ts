@@ -3,14 +3,17 @@ import {
   deleteQuestion,
   getQuestionById,
   getQuestions,
+  getQuestionsForPDF,
   postQuestion,
   replaceQuestion,
   updateQuestion,
 } from "../controllers/questionsController";
 import {
+  getQuestionsForPDFQuery,
   getQuestionsQuery,
   PostQuestionBody,
   Question,
+  QuestionFromDB,
   SearchResult,
 } from "../models/types";
 import pdfkit from "pdfkit";
@@ -63,29 +66,14 @@ questionsRouter.get("/", async (req, res) => {
 questionsRouter.get("/pdf", async (req, res) => {
   try {
     await connectDB();
-    const {
-      isApproved,
-      themes,
-      difficulties,
-      createdBy,
-      amount,
-    }: getQuestionsQuery = req.query;
+    const { questionIds }: getQuestionsForPDFQuery = req.query;
+    if (!questionIds) throw new Error("No questionIDs provided in query");
+    console.log("questionIDs: ", questionIds);
 
-    const questions = await getQuestions(
-      isApproved,
-      themes,
-      difficulties,
-      createdBy,
-      amount,
-    );
+    const questions = await getQuestionsForPDF(questionIds as string[]);
 
     if (Array.isArray(questions)) {
       if (questions.length !== 0) {
-        let searchResult: SearchResult = {
-          totalResults: questions.length,
-          questions: questions,
-          statusCode: 200,
-        };
         const doc = new pdfkit({ size: "A4", margin: 50 });
 
         res.setHeader("Content-Type", "application/pdf");
@@ -97,7 +85,7 @@ questionsRouter.get("/pdf", async (req, res) => {
         doc.fontSize(20).text("Ditt Quiz", { align: "center" });
         doc.moveDown();
 
-        questions.forEach((q: Question, i) => {
+        questions.forEach((q: QuestionFromDB, i) => {
           doc.fontSize(14).text(`${i + 1}. ${q.question}`);
 
           doc.fontSize(12).text(`Svar: ${q.answer}`, {

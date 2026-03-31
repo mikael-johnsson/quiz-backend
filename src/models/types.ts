@@ -27,6 +27,12 @@ export type getQuestionsQuery = {
   amount?: string;
 };
 
+export type getQuestionsForPDFQuery = {
+  questionIds?: string[];
+  themes?: string[];
+  difficulties?: string[];
+};
+
 export type PostQuestionBody = {
   question: string;
   answer: string;
@@ -74,4 +80,7 @@ const questionSchema = new Schema({
   createdWhen: { type: String, default: Date.now },
 });
 
+export type QuestionFromDB = mongoose.HydratedDocument<
+  InferSchemaType<typeof questionSchema>
+>;
 export const QuestionModel = mongoose.model("Question", questionSchema);
