@@ -20,6 +20,7 @@ export const getQuestions = async (
   themes: string[] | undefined,
   difficulties: string[] | undefined,
   createdBy: string | undefined,
+  amount: string | undefined = "20",
 ) => {
   try {
     if (!uri) return { status: 500, message: "Could not find URI to database" };
@@ -36,8 +37,12 @@ export const getQuestions = async (
 
     let questions: Question[] = await QuestionModel.find(filter);
     let questionsToReturn: Question[] = questions;
-    if (isApproved === "false") {
-      questionsToReturn = questionsToReturn.slice(0, 3);
+    if (amount && +amount !== 0) {
+      if (isApproved === "false") {
+        questionsToReturn = questionsToReturn.slice(0, 3);
+      } else {
+        questionsToReturn = questionsToReturn.slice(0, +amount);
+      }
     }
 
     return questionsToReturn;

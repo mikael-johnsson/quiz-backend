@@ -21,14 +21,20 @@ const questionsRouter = express.Router();
 questionsRouter.get("/", async (req, res) => {
   try {
     await connectDB();
-    const { isApproved, themes, difficulties, createdBy }: getQuestionsQuery =
-      req.query;
+    const {
+      isApproved,
+      themes,
+      difficulties,
+      createdBy,
+      amount,
+    }: getQuestionsQuery = req.query;
 
     const questions = await getQuestions(
       isApproved,
       themes,
       difficulties,
       createdBy,
+      amount,
     );
 
     if (Array.isArray(questions)) {
@@ -57,14 +63,20 @@ questionsRouter.get("/", async (req, res) => {
 questionsRouter.get("/pdf", async (req, res) => {
   try {
     await connectDB();
-    const { isApproved, themes, difficulties, createdBy }: getQuestionsQuery =
-      req.query;
+    const {
+      isApproved,
+      themes,
+      difficulties,
+      createdBy,
+      amount,
+    }: getQuestionsQuery = req.query;
 
     const questions = await getQuestions(
       isApproved,
       themes,
       difficulties,
       createdBy,
+      amount,
     );
 
     if (Array.isArray(questions)) {

@@ -24,6 +24,7 @@ export type getQuestionsQuery = {
   themes?: string[];
   difficulties?: string[];
   createdBy?: string;
+  amount?: string;
 };
 
 export type PostQuestionBody = {
