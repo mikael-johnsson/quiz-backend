@@ -5,6 +5,7 @@ import {
   getQuestions,
   postQuestion,
   replaceQuestion,
+  updateQuestion,
 } from "../controllers/questionsController";
 import {
   getQuestionsQuery,
@@ -211,6 +212,20 @@ questionsRouter.put("/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     return { status: 500, message: "Something went wrong", error: error };
+  }
+});
+
+// this one only updates isApproved property
+questionsRouter.patch("/:id", async (req, res) => {
+  try {
+    await connectDB();
+    const { id } = req.params;
+
+    const response = await updateQuestion(id);
+    res.status(response.status).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong", error: error });
   }
 });
 

@@ -196,5 +196,40 @@ export const replaceQuestion = async (id: string, question: Question) => {
   }
 };
 
-// here create updateQuestion (only update certain properties)
-// use updateOne()
+/**
+ *
+ * @param id question id from request params
+ * @returns
+ */
+export const updateQuestion = async (id: string) => {
+  try {
+    console.log("inside updateQuestion");
+    const questionToUpdate = await QuestionModel.findOne({ id: +id });
+    if (questionToUpdate) {
+      console.log("questionToUpdate: ", questionToUpdate);
+
+      questionToUpdate.isApproved = !questionToUpdate.isApproved;
+      const response = await QuestionModel.updateOne(
+        { id: +id },
+        questionToUpdate,
+      );
+      return {
+        status: 200,
+        message: "Question has changed isApproved status",
+        response: response,
+      };
+    } else {
+      return {
+        status: 404,
+        message: "Couldn't find question with that id in database",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      message: "Something went wrong inside updateQuestion",
+      error: error,
+    };
+  }
+};
