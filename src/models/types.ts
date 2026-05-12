@@ -42,6 +42,12 @@ export type PostQuestionBody = {
   createdBy: string;
 };
 
+export type PasswordChangeBody = {
+  email: string;
+  currentPassword: string;
+  newPassword: string;
+};
+
 const userSchema = new Schema({
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
