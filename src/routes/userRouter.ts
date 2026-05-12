@@ -16,9 +16,7 @@ userRouter.post("/", async (req, res) => {
         .json({ message: "User created successfully", user: user });
     }
   } catch (error: any) {
-    res
-      .status(500)
-      .json({ message: "Error creating user", error: error.message });
+    res.status(500).json({ message: "Error creating user: " + error.message });
   }
 });
 
@@ -35,6 +33,6 @@ userRouter.put("/passwordchange", async (req, res) => {
   } catch (error: any) {
     res
       .status(500)
-      .json({ message: "Error updating password", error: error.message });
+      .json({ message: "Error updating password: " + error.message });
   }
 });
