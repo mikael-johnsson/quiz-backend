@@ -83,7 +83,14 @@ const questionSchema = new Schema({
   difficulty: { type: String },
   isApproved: { type: Boolean, default: false },
   createdBy: { type: String },
-  createdWhen: { type: String, default: Date.now },
+  createdWhen: {
+    type: String,
+    default: new Date().toLocaleDateString("sv-SE", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }),
+  },
 });
 
 export type QuestionFromDB = mongoose.HydratedDocument<
