@@ -193,7 +193,7 @@ questionsRouter.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { question }: { question: Question } = req.body;
 
-    if (+id !== question.id) {
+    if (id !== question.id.toString()) {
       res.status(400).send("Parameter Id and Body Id does not match");
     }
 
