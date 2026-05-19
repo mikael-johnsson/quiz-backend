@@ -37,11 +37,12 @@ export const getQuestions = async (
     let questions: Question[] = await QuestionModel.find(filter);
     let questionsToReturn: Question[] = questions;
     if (amount && +amount !== 0) {
-      if (isApproved === "false") {
-        questionsToReturn = questionsToReturn.slice(0, 3);
-      } else {
-        questionsToReturn = questionsToReturn.slice(0, +amount);
-      }
+      // if (isApproved === "false") {
+      //   questionsToReturn = questionsToReturn.slice(0, 3);
+      // } else {
+      //   questionsToReturn = questionsToReturn.slice(0, +amount);
+      // }
+      questionsToReturn = questionsToReturn.slice(0, +amount);
     }
 
     return questionsToReturn;
