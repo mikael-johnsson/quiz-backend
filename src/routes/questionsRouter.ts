@@ -30,6 +30,7 @@ questionsRouter.get("/", async (req, res) => {
       difficulties,
       createdBy,
       amount,
+      search,
     }: getQuestionsQuery = req.query;
 
     const questions = await getQuestions(
@@ -38,6 +39,7 @@ questionsRouter.get("/", async (req, res) => {
       difficulties,
       createdBy,
       amount,
+      search,
     );
 
     if (Array.isArray(questions)) {

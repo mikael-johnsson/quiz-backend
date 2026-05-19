@@ -25,6 +25,7 @@ export type getQuestionsQuery = {
   difficulties?: string[];
   createdBy?: string;
   amount?: string;
+  search?: string;
 };
 
 export type getQuestionsForPDFQuery = {

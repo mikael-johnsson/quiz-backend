@@ -5,6 +5,7 @@ export const buildQueryFilter = (
   themes: string | string[] | undefined = undefined,
   difficulties: string | string[] | undefined = undefined,
   createdBy: string | undefined = undefined,
+  search: string | undefined = undefined,
 ) => {
   let filter: any = {};
 
@@ -35,6 +36,10 @@ export const buildQueryFilter = (
 
   if (createdBy !== null && createdBy !== undefined) {
     filter.createdBy = createdBy;
+  }
+
+  if (search !== null && search !== undefined) {
+    filter.question = { $regex: search, $options: "i" };
   }
 
   return filter;

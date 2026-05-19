@@ -21,18 +21,17 @@ export const getQuestions = async (
   difficulties: string[] | undefined,
   createdBy: string | undefined,
   amount: string | undefined = "20",
+  search: string | undefined,
 ) => {
   try {
     if (!uri) return { status: 500, message: "Could not find URI to database" };
-    // const client = getClient(uri);
-    // const db = client.db("quiz");
-    // const collection = db.collection("questions");
 
     const filter = await buildQueryFilter(
       isApproved,
       themes as string | string[],
       difficulties as string | string[],
       createdBy as string,
+      search as string,
     );
 
     let questions: Question[] = await QuestionModel.find(filter);
