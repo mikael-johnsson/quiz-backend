@@ -192,19 +192,18 @@ export const deleteQuestion = async (id: string) => {
 
 /**
  *
- * @param req users request containing newQuestion
- * @param res response sent to user, MongoDBs response if status 200
- * @returns null
+ * @param id the id of the question, used to find it in the database
+ * @param question new question to replace the old question with
+ * new question will always get isApproved=false
+ * @returns status, message and, if successful, the updated question
  */
 export const replaceQuestion = async (id: string, question: Question) => {
   try {
     if (!uri) return { status: 500, message: "Could not find database URL" };
-    // const client = getClient(uri);
-    // const db = client.db("quiz");
-    // const collection = db.collection("questions");
 
     const questionToUpdate = await QuestionModel.find({ id: +id });
     if (questionToUpdate) {
+      question.isApproved = false;
       const response = await QuestionModel.replaceOne({ id: +id }, question);
       return { status: 200, message: "Question replaced", response: response };
     } else {
@@ -226,7 +225,7 @@ export const replaceQuestion = async (id: string, question: Question) => {
 /**
  *
  * @param id question id from request params
- * @returns
+ * @returns status, message and sometimes response (the updated question)
  */
 export const updateQuestion = async (id: string) => {
   try {
