@@ -1,4 +1,5 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
+import { UserDTO } from "./User";
 
 export interface Quiz {
   questions: number[];
@@ -25,3 +26,8 @@ export type QuizFromDB = mongoose.HydratedDocument<
   InferSchemaType<typeof quizSchema>
 >;
 export const QuizModel = mongoose.model("Quiz", quizSchema);
+
+export type SavedQuizMutationResult = {
+  user: UserDTO;
+  changed: boolean;
+};

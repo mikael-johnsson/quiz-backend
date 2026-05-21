@@ -258,6 +258,113 @@ Files changed
 - `src/controllers/quizController.ts` — added create/get/getById/increment functions with optional population.
 - `src/routes/quizRouter.ts` — added route handlers wired to controllers and `connectDB()`.
 
+## Keep user.savedQuizzes in sync with quiz save flow
+
+Short description
+
+- Update the quiz save and unsave routes so the authenticated user’s `savedQuizzes` array stays in sync with the quiz save counter. When a user saves a quiz, the quiz identifier should be added to that user’s array; when they unsave it, the identifier should be removed.
+
+Acceptance criteria
+
+- `PATCH /quiz/:id/save` adds the quiz identifier to the authenticated user’s `savedQuizzes` array.
+- `PATCH /quiz/:id/unsave` removes the quiz identifier from the authenticated user’s `savedQuizzes` array.
+- Duplicate quiz ids are not stored in `savedQuizzes`.
+- Unsave is safe when the quiz id is not already in the array and returns a clear client error or idempotent success, depending on the existing API pattern.
+- The quiz `amountOfSaves` counter and the user `savedQuizzes` array stay consistent for the same request.
+- Invalid quiz ids, missing users, or missing auth return clear 4xx responses.
+- The implementation uses the existing cookie-auth flow instead of trusting a user id from the request body.
+
+Files to change
+
+- [src/routes/quizRouter.ts](src/routes/quizRouter.ts)
+- [src/controllers/quizController.ts](src/controllers/quizController.ts)
+- [src/controllers/usersController.ts](src/controllers/usersController.ts) or a new user-quiz helper module
+- [src/models/User.ts](src/models/User.ts) if the `savedQuizzes` identifier type needs to be aligned with the actual quiz id type
+- [src/models/Quiz.ts](src/models/Quiz.ts) only if the quiz needs a separate public id field to match `savedQuizzes`
+- [src/types/express/index.d.ts](src/types/express/index.d.ts) if the request user type needs to expose the authenticated user id cleanly
+- [src/tests/quizRouter.test.ts](src/tests/quizRouter.test.ts) or a new route/controller test file
+
+Proposed API contract
+
+- `PATCH /quiz/:id/save`
+- Auth: `quiz_login=<JWT>` cookie required
+- Body: none
+
+Example request:
+
+```http
+PATCH /quiz/665f1234abcd/save
+Cookie: quiz_login=eyJhbGciOi...
+```
+
+Success response example:
+
+```json
+{
+  "message": "Quiz save count incremented",
+  "quiz": {
+    "id": "665f1234abcd",
+    "amountOfSaves": 4
+  },
+  "user": {
+    "id": "user-1",
+    "savedQuizzes": ["665f1234abcd"]
+  }
+}
+```
+
+- `PATCH /quiz/:id/unsave`
+- Auth: `quiz_login=<JWT>` cookie required
+- Body: none
+
+Success response example:
+
+```json
+{
+  "message": "Quiz save count decremented",
+  "quiz": {
+    "id": "665f1234abcd",
+    "amountOfSaves": 3
+  },
+  "user": {
+    "id": "user-1",
+    "savedQuizzes": []
+  }
+}
+```
+
+Implementation note:
+
+- The current codebase stores quizzes in MongoDB with string `_id` values, while `savedQuizzes` is typed as `number[]`. Before coding, decide whether the saved list should store quiz `_id` strings, whether the quiz model needs a numeric public id, or whether the user model type should change to match the existing quiz identifier.
+
+Step-by-step implementation
+
+1. Confirm the identifier shape for saved quizzes and align `savedQuizzes` with the quiz id that the API actually exposes.
+2. Add controller helpers that load the authenticated user and update `savedQuizzes` with add/remove semantics without creating duplicates.
+3. Update `PATCH /quiz/:id/save` to increment `amountOfSaves` and append the quiz id to the user’s saved list in the same request flow.
+4. Update `PATCH /quiz/:id/unsave` to decrement `amountOfSaves` and remove the quiz id from the user’s saved list in the same request flow.
+5. Make the save and unsave handlers reuse the existing auth guard so the user comes from the verified cookie session.
+6. Decide and implement the response shape for both routes so the client can update quiz state and the user’s saved list after one request.
+7. Add validation for duplicate saves, missing saved entries on unsave, invalid quiz ids, and missing user records.
+8. Add route or controller tests for the happy path and the main failure cases: no auth, invalid quiz id, duplicate save, and unsave when the quiz is not saved.
+
+Testing / verification
+
+- Automated: call `PATCH /quiz/:id/save` with a valid session and verify both `amountOfSaves` and `savedQuizzes` change.
+- Automated: call `PATCH /quiz/:id/save` twice and verify the quiz id is not duplicated in `savedQuizzes`.
+- Automated: call `PATCH /quiz/:id/unsave` for a quiz that was saved and verify the quiz id is removed from `savedQuizzes`.
+- Automated: call both routes without a valid cookie and confirm `401`.
+- Manual: log in, save a quiz, confirm the user document changes in MongoDB, then unsave it and confirm the id is removed.
+
+Suggested reviewers
+
+- Backend owner familiar with the auth cookie flow and Mongoose models.
+- Whoever owns the quiz save/unsave client flow, because the response shape may need to include the updated user state.
+
+Rough effort estimate
+
+- Small to medium, roughly 2–4 hours, depending on whether the identifier type must be realigned across the quiz and user models.
+
 Remaining tasks
 
 - Add automated tests for controller and routes (see checklist). The tests should cover success and failure cases, `populate` behavior, and save-count incrementing.

@@ -2,6 +2,10 @@ import express from "express";
 import { connectDB } from "../app";
 import { authGuard } from "../middleware/authGuard";
 import {
+  addSavedQuizToUser,
+  removeSavedQuizFromUser,
+} from "../controllers/usersController";
+import {
   createQuiz,
   getQuizzes,
   getQuizById,
@@ -118,8 +122,38 @@ quizRouter.patch("/:id/save", async (req, res) => {
   try {
     await connectDB();
     const { id } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Invalid authenticated user" });
+    }
+
+    const quiz = await getQuizById(id);
+    if ((quiz as any).status) {
+      return res.status((quiz as any).status).json(quiz);
+    }
+
+    const savedQuizMutation = await addSavedQuizToUser(userId, id);
+
+    if (!savedQuizMutation.changed) {
+      return res.status(200).json({
+        message: "Quiz already saved",
+        quiz,
+        user: savedQuizMutation.user,
+      });
+    }
+
     const response = await incrementQuizSaveCount(id);
-    res.status(response.status || 500).json(response);
+    if (response.status !== 200 || !response.quiz) {
+      await removeSavedQuizFromUser(userId, id);
+      return res.status(response.status || 500).json(response);
+    }
+
+    res.status(200).json({
+      message: "Quiz saved successfully",
+      quiz: response.quiz,
+      user: savedQuizMutation.user,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something went wrong", error: error });
@@ -134,8 +168,36 @@ quizRouter.patch("/:id/unsave", async (req, res) => {
   try {
     await connectDB();
     const { id } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Invalid authenticated user" });
+    }
+
+    const quiz = await getQuizById(id);
+    if ((quiz as any).status) {
+      return res.status((quiz as any).status).json(quiz);
+    }
+
+    const savedQuizMutation = await removeSavedQuizFromUser(userId, id);
+
+    if (!savedQuizMutation.changed) {
+      return res.status(400).json({
+        message: "Quiz was not saved by this user",
+      });
+    }
+
     const response = await decrementQuizSaveCount(id);
-    res.status(response.status || 500).json(response);
+    if (response.status !== 200 || !response.quiz) {
+      await addSavedQuizToUser(userId, id);
+      return res.status(response.status || 500).json(response);
+    }
+
+    res.status(200).json({
+      message: "Quiz unsaved successfully",
+      quiz: response.quiz,
+      user: savedQuizMutation.user,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something went wrong", error: error });

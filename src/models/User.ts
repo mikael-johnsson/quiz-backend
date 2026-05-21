@@ -5,6 +5,7 @@ const userSchema = new Schema({
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  savedQuizzes: { type: [String], required: true, default: [] },
 });
 
 export type UserType = mongoose.HydratedDocument<
@@ -16,6 +17,7 @@ export type UserDTO = {
   id: string;
   firstname: string;
   email: string;
+  savedQuizzes: string[];
 };
 
 export const convertToUserDTO = (user: UserType): UserDTO => {
@@ -23,6 +25,7 @@ export const convertToUserDTO = (user: UserType): UserDTO => {
     id: user._id.toString(),
     firstname: user.firstname,
     email: user.email,
+    savedQuizzes: user.savedQuizzes,
   };
 };
 
