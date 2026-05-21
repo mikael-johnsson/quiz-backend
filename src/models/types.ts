@@ -13,6 +13,13 @@ export interface Question {
   createdWhen?: string;
 }
 
+export interface Quiz {
+  questions: number[];
+  createdBy: string;
+  amountOfSaves: number;
+  createdWhen?: string;
+}
+
 export interface SearchResult {
   totalResults: number;
   questions: Question[];
@@ -98,3 +105,22 @@ export type QuestionFromDB = mongoose.HydratedDocument<
   InferSchemaType<typeof questionSchema>
 >;
 export const QuestionModel = mongoose.model("Question", questionSchema);
+
+const quizSchema = new Schema({
+  questions: [{ type: Number, required: true }],
+  createdBy: { type: String, required: true },
+  amountOfSaves: { type: Number, default: 1 },
+  createdWhen: {
+    type: String,
+    default: new Date().toLocaleDateString("sv-SE", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }),
+  },
+});
+
+export type QuizFromDB = mongoose.HydratedDocument<
+  InferSchemaType<typeof quizSchema>
+>;
+export const QuizModel = mongoose.model("Quiz", quizSchema);

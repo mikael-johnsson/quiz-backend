@@ -10,6 +10,7 @@ import logoutRouter from "./routes/logoutRouter";
 import { meRouter } from "./routes/meRouter";
 import cookieParser from "cookie-parser";
 import { json } from "express";
+import { quizRouter } from "./routes/quizRouter";
 
 dotenv.config();
 const uri: string | undefined = process.env.MONGODB_URI;
@@ -38,6 +39,7 @@ app.use("/users", userRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/me", meRouter);
+app.use("/quiz", quizRouter);
 
 const port = process.env.PORT || 3000;
 
