@@ -1,5 +1,6 @@
 import express from "express";
 import { connectDB } from "../app";
+import { authGuard } from "../middleware/authGuard";
 import {
   createQuiz,
   getQuizzes,
@@ -9,43 +10,6 @@ import {
 } from "../controllers/quizController";
 
 export const quizRouter = express.Router();
-
-/**
- * POST /quiz
- * Create a new saved quiz.
- * Body: { questions: (string|number)[], createdBy: string }
- * Questions are normalized to number[] internally.
- */
-quizRouter.post("/", async (req, res) => {
-  try {
-    await connectDB();
-    const { questions: rawQuestions, createdBy } = req.body;
-
-    // normalize questions from strings/mixed input to number[]
-    let questions: number[] = [];
-    if (Array.isArray(rawQuestions)) {
-      questions = rawQuestions
-        .map((q: any) => {
-          const parsed = typeof q === "string" ? parseInt(q, 10) : Number(q);
-          return Number.isNaN(parsed) ? null : parsed;
-        })
-        .filter((q: any): q is number => q !== null);
-    }
-
-    // validate after parsing
-    if (questions.length === 0) {
-      return res.status(400).json({
-        message: "Invalid questions: must provide a non-empty array of valid question ids",
-      });
-    }
-
-    const response = await createQuiz(questions, createdBy);
-    res.status(response.status || 500).json(response);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong", error: error });
-  }
-});
 
 /**
  * GET /quiz
@@ -92,6 +56,52 @@ quizRouter.get("/:id", async (req, res) => {
     } else {
       res.status(200).json(quiz);
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong", error: error });
+  }
+});
+
+// kräver användare för alla endpoints under denna
+quizRouter.use(authGuard);
+
+/**
+ * POST /quiz
+ * Create a new saved quiz.
+ * Body: { questions: (string|number)[] }
+ * Questions are normalized to number[] internally.
+ */
+quizRouter.post("/", async (req, res) => {
+  try {
+    await connectDB();
+    const { questions: rawQuestions } = req.body;
+    const createdBy = req.user?.id;
+
+    if (!createdBy) {
+      return res.status(401).json({ message: "Invalid authenticated user" });
+    }
+
+    // normalize questions from strings/mixed input to number[]
+    let questions: number[] = [];
+    if (Array.isArray(rawQuestions)) {
+      questions = rawQuestions
+        .map((q: any) => {
+          const parsed = typeof q === "string" ? parseInt(q, 10) : Number(q);
+          return Number.isNaN(parsed) ? null : parsed;
+        })
+        .filter((q: any): q is number => q !== null);
+    }
+
+    // validate after parsing
+    if (questions.length === 0) {
+      return res.status(400).json({
+        message:
+          "Invalid questions: must provide a non-empty array of valid question ids",
+      });
+    }
+
+    const response = await createQuiz(questions, createdBy);
+    res.status(response.status || 500).json(response);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something went wrong", error: error });

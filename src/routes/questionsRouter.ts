@@ -18,6 +18,7 @@ import {
 } from "../models/types";
 import pdfkit from "pdfkit";
 import { connectDB } from "../app";
+import { authGuard } from "../middleware/authGuard";
 
 const questionsRouter = express.Router();
 
@@ -148,6 +149,9 @@ questionsRouter.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Something went wrong", error: error });
   }
 });
+
+// demands logged in user to use endpoints below this
+questionsRouter.use(authGuard);
 
 questionsRouter.post("/", async (req, res) => {
   try {

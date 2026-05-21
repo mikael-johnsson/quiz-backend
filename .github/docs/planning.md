@@ -4,6 +4,107 @@ A living document tracking planned and in-progress features.
 
 ---
 
+## AuthGuard for quizRouter.post
+
+Short description
+
+- Protect `POST /quiz` with an AuthGuard so only authenticated users can create saved quizzes. The guard should follow the existing `quiz_login` httpOnly cookie flow, verify the JWT, and attach the authenticated user to the request so `createdBy` can be derived from auth instead of trusting the client body.
+
+Acceptance criteria
+
+- `POST /quiz` returns `401` when the `quiz_login` cookie is missing, invalid, or expired.
+- A valid cookie allows the request to continue and makes the authenticated user available to the quiz route or controller.
+- The quiz creation flow no longer relies on the client to provide `createdBy` as an arbitrary body field.
+- The guard reuses the same JWT secret and verification behavior as the existing `/me` flow.
+- Existing non-auth quiz routes remain unchanged unless they need shared middleware support.
+
+Files to change
+
+- [src/routes/quizRouter.ts](src/routes/quizRouter.ts)
+- [src/controllers/meController.ts](src/controllers/meController.ts) or a new shared auth helper/middleware module
+- [src/routes/meRouter.ts](src/routes/meRouter.ts) if token verification is refactored into a shared helper
+- [src/controllers/quizController.ts](src/controllers/quizController.ts) if `createdBy` needs to come from authenticated context
+- [src/tests/quizRouter.test.ts](src/tests/quizRouter.test.ts) or a new auth/route test file
+
+Proposed API contract
+
+- Endpoint: `POST /quiz`
+- Auth: cookie-based, `quiz_login=<JWT>` must be sent with the request
+- Body example:
+
+```json
+{
+  "questions": [12, 34, 56]
+}
+```
+
+- Example request:
+
+```http
+POST /quiz
+Cookie: quiz_login=eyJhbGciOi...
+Content-Type: application/json
+
+{ "questions": [12, 34, 56] }
+```
+
+- Success response example:
+
+```json
+{
+  "message": "Quiz saved successfully",
+  "quiz": {
+    "id": "665f...",
+    "questions": [12, 34, 56],
+    "createdBy": "user@example.com",
+    "amountOfSaves": 0
+  }
+}
+```
+
+- Failure response examples:
+
+```json
+{ "message": "Not authenticated" }
+```
+
+```json
+{ "message": "Invalid or expired session" }
+```
+
+Step-by-step implementation
+
+1. Extract JWT verification into a shared helper or middleware so `/me` and `/quiz` use the same token validation path.
+2. Add an `AuthGuard` middleware for `POST /quiz` that checks `req.cookies.quiz_login`, verifies the token, and returns `401` on missing/invalid credentials.
+3. Attach the decoded payload to `req.user` or a similar request field so downstream code can identify the creator.
+4. Update `quizRouter.post` to require the guard before the handler and remove the need to read `createdBy` from `req.body`.
+5. Update quiz creation logic to read `createdBy` from the authenticated payload and fail fast if the payload does not contain the expected user identifier.
+6. Keep the existing question normalization and validation behavior intact so auth changes do not alter quiz content validation.
+7. Add route tests for the three key cases: no cookie, invalid cookie, and valid cookie creating a quiz successfully.
+8. If the request type is extended with `req.user`, add the minimal TypeScript declaration needed so the route compiles cleanly.
+
+Testing / verification
+
+- Automated: call `POST /quiz` without a cookie and confirm `401`.
+- Automated: call `POST /quiz` with an invalid or tampered `quiz_login` cookie and confirm `401`.
+- Automated: call `POST /quiz` with a valid cookie and a valid `questions` array and confirm the quiz is created with the authenticated user as `createdBy`.
+- Manual: log in through the existing `/login` flow, reuse the cookie in a request to `POST /quiz`, and verify the route accepts it.
+- Manual: confirm `/me` still reports the same authenticated payload after the shared auth logic refactor.
+
+Suggested reviewers
+
+- Backend owner familiar with the current cookie/JWT session flow.
+- Whoever owns the quiz persistence logic, since the `createdBy` source changes from client-supplied data to auth-derived data.
+
+Rough effort estimate
+
+- Small to medium, roughly 2–4 hours including route wiring and tests.
+
+Notes / decisions
+
+- The guard should be route-scoped on `POST /quiz` rather than globally applied to the router, so read-only quiz endpoints stay public unless a later requirement changes that.
+- If the decoded token payload does not contain the exact creator field needed by quiz persistence, derive it once in the shared helper rather than duplicating token-shape logic in the router.
+
 ## Add question amount to QuizForm
 
 Short description
