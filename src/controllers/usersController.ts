@@ -1,5 +1,5 @@
-import { PasswordChangeBody, UserModel, UserType } from "../models/types";
 import bcrypt from "bcrypt";
+import { PasswordChangeBody, UserModel, UserType } from "../models/User";
 
 export const createUser = async (userData: UserType) => {
   const existingUser = await UserModel.findOne({ email: userData.email });

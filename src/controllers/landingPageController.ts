@@ -1,5 +1,3 @@
-import { Response } from "express";
-
 export const landingPageController = () => {
   const page = `<h1>Quiz Database</h1>
     <p>Skriv in någon av dessa URL:s för att testa API:et</p>

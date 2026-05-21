@@ -1,0 +1,27 @@
+import mongoose, { InferSchemaType, Schema } from "mongoose";
+
+export interface Quiz {
+  questions: number[];
+  createdBy: string;
+  amountOfSaves: number;
+  createdWhen?: string;
+}
+
+const quizSchema = new Schema({
+  questions: [{ type: Number, required: true }],
+  createdBy: { type: String, required: true },
+  amountOfSaves: { type: Number, default: 1 },
+  createdWhen: {
+    type: String,
+    default: new Date().toLocaleDateString("sv-SE", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }),
+  },
+});
+
+export type QuizFromDB = mongoose.HydratedDocument<
+  InferSchemaType<typeof quizSchema>
+>;
+export const QuizModel = mongoose.model("Quiz", quizSchema);

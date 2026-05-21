@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
-import { QuestionModel, QuizModel } from "../models/types";
+import { QuizModel } from "../models/Quiz";
+import { QuestionModel } from "../models/Question";
 
 dotenv.config();
 

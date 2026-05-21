@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { UserDTO } from "../models/types";
+import { UserDTO } from "../models/User";
 
 export const verifyToken = (cookie: string): UserDTO => {
   const secret = process.env.JWT_SECRET;

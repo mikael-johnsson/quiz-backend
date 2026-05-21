@@ -8,6 +8,9 @@ import {
   replaceQuestion,
   updateQuestion,
 } from "../controllers/questionsController";
+import pdfkit from "pdfkit";
+import { connectDB } from "../app";
+import { authGuard } from "../middleware/authGuard";
 import {
   getQuestionsForPDFQuery,
   getQuestionsQuery,
@@ -15,10 +18,7 @@ import {
   Question,
   QuestionFromDB,
   SearchResult,
-} from "../models/types";
-import pdfkit from "pdfkit";
-import { connectDB } from "../app";
-import { authGuard } from "../middleware/authGuard";
+} from "../models/Question";
 
 const questionsRouter = express.Router();
 

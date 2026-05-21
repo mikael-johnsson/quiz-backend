@@ -1,4 +1,4 @@
-import { convertToUserDTO, UserModel } from "../models/types";
+import { convertToUserDTO, UserModel } from "../models/User";
 import bcrypt from "bcrypt";
 
 export const loginUser = async (email: string, password: string) => {

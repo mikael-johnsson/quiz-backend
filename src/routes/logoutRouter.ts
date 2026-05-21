@@ -1,5 +1,4 @@
 import express from "express";
-import { connectDB } from "../app";
 
 export const logoutRouter = express.Router();
 

@@ -1,7 +1,7 @@
 import express from "express";
 import { changePassword, createUser } from "../controllers/usersController";
 import { connectDB } from "../app";
-import { PasswordChangeBody } from "../models/types";
+import { PasswordChangeBody } from "../models/User";
 
 export const userRouter = express.Router();
 

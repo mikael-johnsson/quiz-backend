@@ -1,4 +1,4 @@
-import { Question, QuestionFromDB, QuestionModel } from "../models/types";
+import { Question, QuestionFromDB, QuestionModel } from "../models/Question";
 // import { getClient } from "../database/quiz_database";
 import dotenv from "dotenv";
 import { buildQueryFilter } from "../utils/buildQueryFilter";
