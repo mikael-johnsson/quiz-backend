@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { QuizModel } from "../models/Quiz";
+import { QuizCreatedBy, QuizModel } from "../models/Quiz";
 import { QuestionModel } from "../models/Question";
 
 dotenv.config();
@@ -12,9 +12,12 @@ const uri: string | undefined = process.env.MONGODB_URI;
  * and stores the quiz with initial `amountOfSaves`.
  *
  * @param questionIds - array of question `id` values (numbers)
- * @param createdBy - identifier for who created the quiz (email or user id)
+ * @param createdBy - creator metadata for who created the quiz
  */
-export const createQuiz = async (questionIds: number[], createdBy: string) => {
+export const createQuiz = async (
+  questionIds: number[],
+  createdBy: QuizCreatedBy,
+) => {
   try {
     // ensure DB URI is available
     if (!uri) return { status: 500, message: "Could not find URI to database" };
@@ -27,7 +30,12 @@ export const createQuiz = async (questionIds: number[], createdBy: string) => {
       };
     }
 
-    if (typeof createdBy !== "string" || createdBy.trim() === "") {
+    if (
+      typeof createdBy.id !== "string" ||
+      createdBy.id.trim() === "" ||
+      typeof createdBy.firstname !== "string" ||
+      createdBy.firstname.trim() === ""
+    ) {
       return { status: 400, message: "Quiz must contain createdBy" };
     }
 
@@ -50,7 +58,10 @@ export const createQuiz = async (questionIds: number[], createdBy: string) => {
     // create the quiz document; `amountOfSaves` starts at 1
     const quiz = await QuizModel.create({
       questions: uniqueQuestionIds,
-      createdBy: createdBy.trim(),
+      createdBy: {
+        id: createdBy.id.trim(),
+        firstname: createdBy.firstname.trim(),
+      },
       amountOfSaves: 1,
     });
 
@@ -73,7 +84,7 @@ export const createQuiz = async (questionIds: number[], createdBy: string) => {
  * Retrieve quizzes. When `populate` is true, replace stored question ids
  * with the full question documents fetched from the questions collection.
  *
- * @param createdBy - optional filter to only return quizzes created by this identifier
+ * @param createdBy - optional filter to only return quizzes created by this creator id
  * @param populate - when true, return full question objects instead of ids
  */
 export const getQuizzes = async (
@@ -83,8 +94,9 @@ export const getQuizzes = async (
   try {
     if (!uri) return { status: 500, message: "Could not find URI to database" };
 
-    const filter = createdBy ? { createdBy } : {};
-    const quizzes = await QuizModel.find(filter);
+    const quizzes = createdBy
+      ? await QuizModel.find({ "createdBy.id": createdBy } as any)
+      : await QuizModel.find();
 
     if (!populate) return quizzes;
 
@@ -102,7 +114,7 @@ export const getQuizzes = async (
       const ordered = q.questions
         .map((qid: number) => idMap.get(qid))
         .filter(Boolean);
-      populatedQuizzes.push({ ...q.toObject(), questions: ordered });
+      populatedQuizzes.push({ ...(q as any).toObject(), questions: ordered });
     }
 
     return populatedQuizzes;

@@ -81,7 +81,7 @@ quizRouter.post("/", async (req, res) => {
   try {
     await connectDB();
     const { questions: rawQuestions } = req.body;
-    const createdBy = req.user?.id;
+    const createdBy = req.user;
 
     if (!createdBy) {
       return res.status(401).json({ message: "Invalid authenticated user" });
@@ -106,7 +106,10 @@ quizRouter.post("/", async (req, res) => {
       });
     }
 
-    const response = await createQuiz(questions, createdBy);
+    const response = await createQuiz(questions, {
+      id: createdBy.id,
+      firstname: createdBy.firstname,
+    });
     res.status(response.status || 500).json(response);
   } catch (error) {
     console.error(error);

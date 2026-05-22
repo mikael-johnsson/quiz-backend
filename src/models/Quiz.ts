@@ -1,16 +1,24 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import { UserDTO } from "./User";
 
+export type QuizCreatedBy = {
+  id: string;
+  firstname: string;
+};
+
 export interface Quiz {
   questions: number[];
-  createdBy: string;
+  createdBy: QuizCreatedBy;
   amountOfSaves: number;
   createdWhen?: string;
 }
 
 const quizSchema = new Schema({
   questions: [{ type: Number, required: true }],
-  createdBy: { type: String, required: true },
+  createdBy: {
+    id: { type: String, required: true },
+    firstname: { type: String, required: true },
+  },
   amountOfSaves: { type: Number, default: 1 },
   createdWhen: {
     type: String,
