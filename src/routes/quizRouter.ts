@@ -110,6 +110,22 @@ quizRouter.post("/", async (req, res) => {
       id: createdBy.id,
       firstname: createdBy.firstname,
     });
+
+    if (response.status === 201 && response.quiz) {
+      const quizId = response.quiz._id?.toString();
+      if (quizId) {
+        const savedQuizMutation = await addSavedQuizToUser(
+          createdBy.id,
+          quizId,
+        );
+
+        return res.status(response.status).json({
+          ...response,
+          user: savedQuizMutation.user,
+        });
+      }
+    }
+
     res.status(response.status || 500).json(response);
   } catch (error) {
     console.error(error);
