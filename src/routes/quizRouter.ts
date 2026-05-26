@@ -34,7 +34,7 @@ quizRouter.get("/", async (req, res) => {
 
     if (Array.isArray(quizzes)) {
       quizzes.sort((a, b) => b.amountOfSaves - a.amountOfSaves);
-      const slicedQuizzez = quizzes.slice(0, amount ? +amount : 3);
+      const slicedQuizzez = quizzes.slice(0, amount ? +amount : quizzes.length);
       res.status(200).json(slicedQuizzez);
     } else {
       res.status(quizzes.status || 500).json(quizzes);
