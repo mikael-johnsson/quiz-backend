@@ -24,7 +24,7 @@ export const quizRouter = express.Router();
 quizRouter.get("/", async (req, res) => {
   try {
     await connectDB();
-    const { createdBy, populate } = req.query;
+    const { createdBy, populate, amount } = req.query;
     const populateFlag = String(populate) === "true";
 
     const quizzes = await getQuizzes(
@@ -34,7 +34,7 @@ quizRouter.get("/", async (req, res) => {
 
     if (Array.isArray(quizzes)) {
       quizzes.sort((a, b) => b.amountOfSaves - a.amountOfSaves);
-      const slicedQuizzez = quizzes.slice(0, 3);
+      const slicedQuizzez = quizzes.slice(0, amount ? +amount : 3);
       res.status(200).json(slicedQuizzez);
     } else {
       res.status(quizzes.status || 500).json(quizzes);
