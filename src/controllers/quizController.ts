@@ -142,7 +142,7 @@ export const getQuizzes = async (
  * @param id - MongoDB `_id` of the quiz document
  * @param populate - when true, include full question objects
  */
-export const getQuizById = async (id: string, populate: boolean = false) => {
+export const getQuizById = async (id: string, populate: boolean = true) => {
   try {
     if (!uri) return { status: 500, message: "Could not find URI to database" };
 

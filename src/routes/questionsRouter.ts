@@ -11,6 +11,7 @@ import {
 import pdfkit from "pdfkit";
 import { connectDB } from "../app";
 import { authGuard } from "../middleware/authGuard";
+import { getQuizById } from "../controllers/quizController";
 import {
   getQuestionsForPDFQuery,
   getQuestionsQuery,
@@ -19,8 +20,51 @@ import {
   QuestionFromDB,
   SearchResult,
 } from "../models/Question";
+import { Quiz, QuizForPdf } from "../models/Quiz";
 
 const questionsRouter = express.Router();
+
+const isQuizLookupError = (
+  value: unknown,
+): value is { status: number; message: string; error?: unknown } =>
+  typeof value === "object" &&
+  value !== null &&
+  "status" in value &&
+  "message" in value;
+
+const createPdfFromQuestions = (
+  res: express.Response,
+  title: string,
+  questions: QuestionFromDB[],
+) => {
+  const doc = new pdfkit({ size: "A4", margin: 50 });
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", 'attachment; filename="quiz.pdf"');
+
+  doc.pipe(res);
+
+  doc.fontSize(20).text(title, { align: "center" });
+  doc.moveDown();
+
+  questions.forEach((q: QuestionFromDB, i) => {
+    doc.fontSize(14).text(`${i + 1}. ${q.question}`);
+
+    doc.fontSize(12).text(`Svar: ${q.answer}`, {
+      indent: 10,
+    });
+    doc.fontSize(12).text(`Svårighetsgrad: ${q.difficulty}`, {
+      indent: 10,
+    });
+    doc.fontSize(12).text(`${q.themes ? `Tema: ${q.themes.join(", ")}` : ""}`, {
+      indent: 10,
+    });
+
+    doc.moveDown();
+  });
+
+  doc.end();
+};
 
 questionsRouter.get("/", async (req, res) => {
   try {
@@ -77,38 +121,7 @@ questionsRouter.get("/pdf", async (req, res) => {
 
     if (Array.isArray(questions)) {
       if (questions.length !== 0) {
-        const doc = new pdfkit({ size: "A4", margin: 50 });
-
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", 'attachment; filename="quiz.pdf"');
-
-        // Stream PDF directly to response
-        doc.pipe(res);
-
-        doc.fontSize(20).text("Ditt Quiz", { align: "center" });
-        doc.moveDown();
-
-        questions.forEach((q: QuestionFromDB, i) => {
-          doc.fontSize(14).text(`${i + 1}. ${q.question}`);
-
-          doc.fontSize(12).text(`Svar: ${q.answer}`, {
-            indent: 10,
-          });
-          doc.fontSize(12).text(`Svårighetsgrad: ${q.difficulty}`, {
-            indent: 10,
-          });
-          doc
-            .fontSize(12)
-            .text(`${q.themes ? `Tema: ${q.themes.join(", ")}` : ""}`, {
-              indent: 10,
-            });
-
-          doc.moveDown();
-        });
-
-        doc.end();
-
-        // res.status(200).json(searchResult);
+        createPdfFromQuestions(res, "Ditt Quiz", questions);
       } else {
         res
           .status(404)
@@ -116,6 +129,44 @@ questionsRouter.get("/pdf", async (req, res) => {
       }
     } else {
       res.status(questions.status).json(questions);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong", error: error });
+  }
+});
+
+questionsRouter.get("/pdfQuiz/:id", async (req, res) => {
+  try {
+    await connectDB();
+
+    const { id } = req.params;
+    const quizResult = await getQuizById(id);
+
+    if (isQuizLookupError(quizResult)) {
+      return res.status(quizResult.status).json(quizResult);
+    }
+
+    const quiz = quizResult as QuizForPdf;
+
+    if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+      return res.status(404).send("Didn't find any questions in that quiz");
+    }
+
+    // const questions = await getQuestionsForPDF(
+    //   quiz.questions.map((questionId: number) => questionId.toString()),
+    // );
+
+    if (Array.isArray(quiz.questions)) {
+      if (quiz.questions.length !== 0) {
+        createPdfFromQuestions(res, quiz.quizName, quiz.questions);
+      } else {
+        res
+          .status(404)
+          .send("Didn't find any questions that match those filters");
+      }
+    } else {
+      // res.status(quiz.status).json(questions);
     }
   } catch (error) {
     console.error(error);

@@ -1,5 +1,6 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 import { UserDTO } from "./User";
+import { QuestionFromDB } from "./Question";
 
 export type QuizCreatedBy = {
   id: string;
@@ -8,6 +9,14 @@ export type QuizCreatedBy = {
 
 export interface Quiz {
   questions: number[];
+  createdBy: QuizCreatedBy;
+  amountOfSaves: number;
+  createdWhen?: string;
+  quizName: string;
+}
+
+export interface QuizForPdf {
+  questions: QuestionFromDB[];
   createdBy: QuizCreatedBy;
   amountOfSaves: number;
   createdWhen?: string;
