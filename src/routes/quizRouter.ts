@@ -80,7 +80,7 @@ quizRouter.use(authGuard);
 quizRouter.post("/", async (req, res) => {
   try {
     await connectDB();
-    const { questions: rawQuestions } = req.body;
+    const { questions: rawQuestions, quizName } = req.body;
     const createdBy = req.user;
 
     if (!createdBy) {
@@ -106,10 +106,14 @@ quizRouter.post("/", async (req, res) => {
       });
     }
 
-    const response = await createQuiz(questions, {
-      id: createdBy.id,
-      firstname: createdBy.firstname,
-    });
+    const response = await createQuiz(
+      questions,
+      {
+        id: createdBy.id,
+        firstname: createdBy.firstname,
+      },
+      quizName,
+    );
 
     if (response.status === 201 && response.quiz) {
       const quizId = response.quiz._id?.toString();

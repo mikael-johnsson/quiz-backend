@@ -13,10 +13,12 @@ const uri: string | undefined = process.env.MONGODB_URI;
  *
  * @param questionIds - array of question `id` values (numbers)
  * @param createdBy - creator metadata for who created the quiz
+ * @param quizName - the name of the quiz
  */
 export const createQuiz = async (
   questionIds: number[],
   createdBy: QuizCreatedBy,
+  quizName: string,
 ) => {
   try {
     // ensure DB URI is available
@@ -37,6 +39,10 @@ export const createQuiz = async (
       createdBy.firstname.trim() === ""
     ) {
       return { status: 400, message: "Quiz must contain createdBy" };
+    }
+
+    if (!quizName || quizName.trim() === "") {
+      return { status: 400, message: "Quiz must contain a name" };
     }
 
     // remove duplicate ids to avoid redundant DB queries / storage
@@ -63,6 +69,7 @@ export const createQuiz = async (
         firstname: createdBy.firstname.trim(),
       },
       amountOfSaves: 1,
+      quizName: quizName.trim(),
     });
 
     return {

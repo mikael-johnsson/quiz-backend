@@ -11,6 +11,7 @@ export interface Quiz {
   createdBy: QuizCreatedBy;
   amountOfSaves: number;
   createdWhen?: string;
+  quizName: string;
 }
 
 const quizSchema = new Schema({
@@ -28,6 +29,7 @@ const quizSchema = new Schema({
       day: "2-digit",
     }),
   },
+  quizName: { type: String, required: true },
 });
 
 export type QuizFromDB = mongoose.HydratedDocument<
